@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Копилка 300 000 ₽</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent; }
+  body { background: linear-gradient(145deg,#f6f9fc,#e9f1f8);
+         min-height:100vh; padding:0.75rem; color:#0b2b3f; }
+  .app { max-width: 900px; margin: 0 auto; }
+
+  /* Шапка */
+  .header {
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+    border-radius: 24px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+    box-shadow: 0 10px 25px rgba(0,20,30,0.07);
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  .header-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .title h1 { font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg,#0b2b3f,#1d5b7a);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .title .sub { font-size:0.75rem; color:#4a6b7c; margin-top:2px;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .online-badge { display:inline-flex; align-items:center; gap:5px;
+    font-size:0.7rem; color:#1d5b7a; }
+  .online-dot { width:7px; height:7px; border-radius:50%; background:#2ec27e;
+    box-shadow: 0 0 0 3px rgba(46,194,126,0.2); animation: pulse 1.8s infinite; }
+  .online-dot.offline { background:#e5484d; box-shadow:0 0 0 3px rgba(229,72,77,0.2);
+    animation: none; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+  .add-btn {
+    background: linear-gradient(135deg,#2b7a9c,#1d5b7a); color:white;
+    border: none; border-radius: 100px; padding: 10px 18px;
+    font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 6px 15px rgba(29,91,122,0.3);
+    display: flex; align-items: center; gap: 6px;
+    transition: transform 0.15s; white-space: nowrap;
+  }
+  .add-btn:active { transform: scale(0.95); }
+
+  /* Пользователь */
+  .user-picker {
+    display:flex; gap:6px; margin-bottom:1rem;
+    background: rgba(255,255,255,0.7);
+    padding:6px; border-radius:100px; width:fit-content;
+    border: 1px solid #e2ecf3;
+  }
+  .user-picker button {
+    border:none; background:transparent; border-radius:100px;
+    padding:7px 16px; font-size:0.82rem; color:#2c4e62;
+    cursor:pointer; font-weight:600; transition: all 0.15s;
+  }
+  .user-picker button.active { background: #1d5b7a; color: white; }
+
+  /* Общая статистика */
+  .stats-grid {
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    margin-top: 14px;
+  }
+  .stat-box { background:#f6fafc; border-radius:14px; padding:10px 12px;
+    border:1px solid #e2ecf3; }
+  .stat-box .label { font-size:0.62rem; text-transform:uppercase;
+    letter-spacing:0.4px; color:#5b7e93; font-weight:700; }
+  .stat-box .value { font-size:1.05rem; font-weight:800; color:#0b2b3f;
+    line-height:1.2; margin-top:2px; }
+  .stat-box .value small { font-size:0.72rem; font-weight:600; color:#617e8f; }
+  .stat-box.accent { background: linear-gradient(135deg,#e6f3fa,#d4e9f5);
+    border-color:#9ac2d9; }
+  .stat-box.accent .value { color: #1d5b7a; }
+
+  .progress-bar-bg { height:10px; background:#e2ecf3; border-radius:100px;
+    overflow:hidden; margin-top:12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+  .progress-fill { height:100%; width:0%;
+    background: linear-gradient(90deg,#2b7a9c,#1d5b7a); border-radius:100px;
+    transition: width 0.3s ease; }
+  .progress-line { display:flex; justify-content:space-between;
+    font-size:0.72rem; color:#4a6b7c; font-weight:600; margin-top:6px; }
+
+  /* Купюры */
+  .bills-summary {
+    background: white; border-radius: 20px; padding: 1rem 1.1rem;
+    margin-bottom: 1rem; border: 1px solid rgba(210,225,235,0.6);
+    box-shadow: 0 8px 20px rgba(0,20,30,0.04);
+  }
+  .bills-summary h3 { font-size: 0.9rem; font-weight: 700;
+    margin-bottom: 10px; color:#0b2b3f; }
+  .bills-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .bill-chip {
+    border-radius: 12px; padding: 8px 6px; text-align: center;
+    color: white; font-weight: 700; font-size: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .bill-chip[data-n="100"]  { background: linear-gradient(135deg,#c4a356,#9a7e3a); }
+  .bill-chip[data-n="200"]  { background: linear-gradient(135deg,#5b8ac9,#3a5f95); }
+  .bill-chip[data-n="500"]  { background: linear-gradient(135deg,#7e9c62,#587340); }
+  .bill-chip[data-n="1000"] { background: linear-gradient(135deg,#9a5b5b,#6e3a3a); }
+  .bill-chip .num { font-size: 1rem; line-height: 1; }
+  .bill-chip .lbl { font-size: 0.6rem; opacity: 0.9; margin-top: 3px;
+    text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* Календарь */
+  .calendar-section {
+    background: white; border-radius: 20px; padding: 1rem 1.1rem;
+    margin-bottom: 1rem; border: 1px solid rgba(210,225,235,0.6);
+    box-shadow: 0 8px 20px rgba(0,20,30,0.04);
+  }
+  .cal-head { display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 12px; }
+  .cal-title { font-size: 1rem; font-weight: 700; text-transform: capitalize; }
+  .cal-nav { display: flex; gap: 6px; }
+  .cal-nav button {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1.5px solid #cbdae3; background: transparent;
+    cursor: pointer; font-size: 1rem; color: #2c4e62;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .cal-nav button:hover { background: #f6fafc; }
+
+  .cal-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    margin-bottom: 6px;
+  }
+  .cal-weekdays div {
+    text-align: center; font-size: 0.65rem; font-weight: 700;
+    color: #7a99ac; text-transform: uppercase; padding: 4px 0;
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .cal-day {
+    aspect-ratio: 1; border-radius: 10px; background: #f6fafc;
+    border: 1.5px solid #e2ecf3; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 2px;
+    cursor: pointer; transition: all 0.15s; position: relative;
+    min-height: 42px;
+  }
+  .cal-day:hover { border-color: #b8d0df; transform: translateY(-1px); }
+  .cal-day.empty { background: transparent; border: none; cursor: default; }
+  .cal-day.empty:hover { transform: none; border: none; }
+  .cal-day.today { border-color: #2b7a9c; border-width: 2px; }
+  .cal-day.has-entry { background: linear-gradient(135deg,#e6f3fa,#d4e9f5);
+    border-color: #9ac2d9; }
+  .cal-day .num { font-size: 0.75rem; font-weight: 700; color: #2c4e62;
+    line-height: 1; }
+  .cal-day.has-entry .num { color: #1d5b7a; }
+  .cal-day .sum { font-size: 0.55rem; font-weight: 700; color: #1d5b7a;
+    margin-top: 2px; line-height: 1; }
+  .cal-day .dot {
+    position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%; background: #2ec27e;
+  }
+
+  /* Графики */
+  .charts-section {
+    background: white; border-radius: 20px; padding: 1rem 1.1rem;
+    margin-bottom: 1rem; border: 1px solid rgba(210,225,235,0.6);
+    box-shadow: 0 8px 20px rgba(0,20,30,0.04);
+  }
+  .charts-section h3 { font-size: 0.95rem; font-weight: 700;
+    margin-bottom: 12px; color: #0b2b3f;
+    display: flex; align-items: center; gap: 6px; }
+  .chart-tabs {
+    display: flex; gap: 4px; margin-bottom: 12px;
+    background: #f6fafc; padding: 4px; border-radius: 100px;
+    overflow-x: auto;
+  }
+  .chart-tabs button {
+    flex: 1; border: none; background: transparent;
+    padding: 8px 12px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 600; color: #4a6b7c;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .chart-tabs button.active {
+    background: linear-gradient(135deg,#2b7a9c,#1d5b7a); color: white;
+    box-shadow: 0 4px 10px rgba(29,91,122,0.25);
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+    margin-top: 8px;
+  }
+
+  /* Бар-чарт */
+  .bar-chart {
+    display: flex; align-items: flex-end; gap: 4px;
+    height: 100%; padding: 0 2px;
+    border-bottom: 1px solid #e2ecf3;
+  }
+  .bar-col {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    height: 100%; position: relative;
+    min-width: 0;
+  }
+  .bar {
+    width: 100%; max-width: 40px;
+    background: linear-gradient(180deg,#2b7a9c,#1d5b7a);
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+    min-height: 2px;
+    position: relative;
+  }
+  .bar-val {
+    position: absolute;
+    top: -18px; left: 50%; transform: translateX(-50%);
+    font-size: 0.6rem; font-weight: 700; color: #1d5b7a;
+    white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .bar-col:hover .bar-val { opacity: 1; }
+  .bar-lbl {
+    font-size: 0.6rem; color: #7a99ac;
+    font-weight: 600; margin-top: 6px;
+    white-space: nowrap;
+    transform: rotate(-45deg);
+    transform-origin: center;
+    height: 18px;
+  }
+
+  /* Линия */
+  .line-chart {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+  .line-chart .grid-line {
+    stroke: #e2ecf3; stroke-width: 1;
+  }
+  .line-chart .area {
+    fill: url(#gradientArea); opacity: 0.5;
+  }
+  .line-chart .line {
+    fill: none; stroke: #1d5b7a; stroke-width: 2.5;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .line-chart .point {
+    fill: #1d5b7a; stroke: white; stroke-width: 2;
+  }
+  .line-chart .lbl {
+    font-size: 9px; fill: #7a99ac; font-weight: 600;
+  }
+  .line-chart .lbl-val {
+    font-size: 10px; fill: #1d5b7a; font-weight: 700;
+  }
+
+  .charts-empty {
+    text-align: center; color: #7a99ac; padding: 40px 0;
+    font-size: 0.85rem;
+  }
+
+  /* История */
+  .history-section {
+    background: white; border-radius: 20px; padding: 1rem 1.1rem;
+    margin-bottom: 1rem; border: 1px solid rgba(210,225,235,0.6);
+    box-shadow: 0 8px 20px rgba(0,20,30,0.04);
+  }
+  .history-section h2 { font-size: 0.95rem; font-weight: 700;
+    margin-bottom: 0.75rem; display:flex; align-items:center; gap:6px; }
+  .history-list { display:flex; flex-direction:column; gap:6px;
+    max-height: 340px; overflow-y: auto; }
+  .history-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; background:#f6fafc; border-radius: 12px;
+    font-size: 0.8rem; color:#2c4e62; gap: 10px;
+  }
+  .history-item .who { font-weight: 700; color:#1d5b7a; }
+  .history-item .when { font-size:0.68rem; color:#7a99ac; margin-top:1px; }
+  .history-item .right { text-align:right; white-space: nowrap; }
+  .history-item .amount { font-weight: 800; color: #1d5b7a; }
+  .history-item .del {
+    background: transparent; border: none; color: #e5484d;
+    cursor: pointer; font-size: 1.1rem; padding: 4px 8px;
+    border-radius: 8px; transition: background 0.15s;
+    margin-left: 8px;
+  }
+  .history-item .del:hover { background: rgba(229,72,77,0.1); }
+  .history-empty { color:#7a99ac; font-size:0.82rem;
+    text-align:center; padding:16px; }
+
+  /* Модалка */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(10,30,45,0.55);
+    backdrop-filter: blur(4px); display: none; align-items: center;
+    justify-content: center; padding: 1rem; z-index: 100;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: white; border-radius: 24px; padding: 1.5rem;
+    width: 100%; max-width: 420px; box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn { from { opacity:0; transform: translateY(20px) scale(0.96); }
+                       to   { opacity:1; transform: none; } }
+  .modal h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;
+    color:#0b2b3f; }
+  .form-row { margin-bottom: 12px; }
+  .form-row label { display: block; font-size: 0.78rem;
+    font-weight: 600; color:#4a6b7c; margin-bottom: 4px; }
+  .form-row input[type="date"] {
+    width: 100%; padding: 10px 12px; border-radius: 12px;
+    border: 1.5px solid #cbdae3; font-size: 0.9rem; background: #f6fafc;
+    color: #0b2b3f;
+  }
+  .bill-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .bill-input {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 12px; border: 1.5px solid #cbdae3;
+    background: #f6fafc;
+  }
+  .bill-input .lbl { font-size: 0.75rem; font-weight: 700; min-width: 44px; }
+  .bill-input input {
+    width: 100%; border: none; background: transparent;
+    font-size: 0.95rem; font-weight: 700; color:#0b2b3f;
+    text-align: right; outline: none;
+  }
+  .bill-input[data-n="100"] { border-color: #c4a356; }
+  .bill-input[data-n="200"] { border-color: #5b8ac9; }
+  .bill-input[data-n="500"] { border-color: #7e9c62; }
+  .bill-input[data-n="1000"]{ border-color: #9a5b5b; }
+
+  .modal-total {
+    text-align: center; padding: 12px; border-radius: 14px;
+    background: linear-gradient(135deg,#e6f3fa,#d4e9f5);
+    font-size: 1.3rem; font-weight: 800; color:#1d5b7a;
+    margin: 12px 0;
+  }
+  .modal-total small { font-size: 0.85rem; font-weight: 600; color:#617e8f; }
+  .modal-actions { display: flex; gap: 8px; }
+  .modal-actions button {
+    flex: 1; padding: 12px; border-radius: 14px; font-size: 0.9rem;
+    font-weight: 700; cursor: pointer; border: none; transition: all 0.15s;
+  }
+  .btn-cancel { background: #f0f5f9; color: #4a6b7c; }
+  .btn-cancel:hover { background: #e2ecf3; }
+  .btn-save {
+    background: linear-gradient(135deg,#2b7a9c,#1d5b7a); color: white;
+    box-shadow: 0 6px 15px rgba(29,91,122,0.3);
+  }
+  .btn-save:active { transform: scale(0.97); }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1d5b7a; color: white; padding: 12px 22px;
+    border-radius: 100px; font-size: 0.85rem; font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15); opacity: 0;
+    transition: all 0.3s ease; z-index: 1000; pointer-events: none;
+    max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { background: #e5484d; }
+
+  .syncing {
+    position: fixed; top: 16px; right: 16px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+    padding: 8px 14px; border-radius: 100px; font-size: 0.75rem;
+    color:#2c4e62; font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex; align-items: center; gap: 8px; opacity: 0;
+    transition: opacity 0.3s; z-index: 999; pointer-events: none;
+  }
+  .syncing.show { opacity: 1; }
+  .spinner {
+    width: 11px; height: 11px;
+    border: 2px solid #cbdae3; border-top-color: #1d5b7a;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    .title h1 { font-size: 1.1rem; }
+    .stat-box .value { font-size: 0.95rem; }
+    .stat-box { padding: 8px 10px; }
+    .cal-day { min-height: 36px; }
+    .cal-day .num { font-size: 0.7rem; }
+    .cal-day .sum { font-size: 0.5rem; }
+    .chart-wrap { height: 180px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Шапка -->
+  <div class="header">
+    <div class="header-top">
+      <div class="title">
+        <h1>Копилка 300 000 ₽</h1>
+        <div class="sub">
+          <span>Вместе 💑</span>
+          <span class="online-badge">
+            <span class="online-dot" id="onlineDot"></span>
+            <span id="onlineText">Подключение…</span>
+          </span>
+        </div>
+      </div>
+      <button class="add-btn" id="openModalBtn">＋ Отложить</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box accent">
+        <div class="label">Всего</div>
+        <div class="value"><span id="savedAll">0</span> <small>₽</small></div>
+      </div>
+      <div class="stat-box">
+        <div class="label">За месяц</div>
+        <div class="value"><span id="savedMonth">0</span> <small>₽</small></div>
+      </div>
+      <div class="stat-box">
+        <div class="label">За неделю</div>
+        <div class="value"><span id="savedWeek">0</span> <small>₽</small></div>
+      </div>
+    </div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+    </div>
+    <div class="progress-line">
+      <span id="progressPercent">0%</span>
+      <span>Осталось: <span id="remaining">300 000</span> ₽</span>
+    </div>
+  </div>
+
+  <!-- Пользователь -->
+  <div class="user-picker">
+    <button data-user="Я" class="active">Я</button>
+    <button data-user="Партнёр">Партнёр</button>
+  </div>
+
+  <!-- Купюры -->
+  <div class="bills-summary">
+    <h3>💵 Купюры в копилке</h3>
+    <div class="bills-row">
+      <div class="bill-chip" data-n="100">
+        <div class="num" id="cnt100">0</div>
+        <div class="lbl">по 100 ₽</div>
+      </div>
+      <div class="bill-chip" data-n="200">
+        <div class="num" id="cnt200">0</div>
+        <div class="lbl">по 200 ₽</div>
+      </div>
+      <div class="bill-chip" data-n="500">
+        <div class="num" id="cnt500">0</div>
+        <div class="lbl">по 500 ₽</div>
+      </div>
+      <div class="bill-chip" data-n="1000">
+        <div class="num" id="cnt1000">0</div>
+        <div class="lbl">по 1000 ₽</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Календарь -->
+  <div class="calendar-section">
+    <div class="cal-head">
+      <div class="cal-title" id="calTitle">—</div>
+      <div class="cal-nav">
+        <button id="calPrev">‹</button>
+        <button id="calToday">•</button>
+        <button id="calNext">›</button>
+      </div>
+    </div>
+    <div class="cal-weekdays">
+      <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div>
+      <div>Сб</div><div>Вс</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- Графики -->
+  <div class="charts-section">
+    <h3>📊 Статистика</h3>
+    <div class="chart-tabs" id="chartTabs">
+      <button data-tab="month" class="active">По месяцам</button>
+      <button data-tab="week">По неделям</button>
+      <button data-tab="cumulative">Накопление</button>
+      <button data-tab="weekday">Дни недели</button>
+    </div>
+    <div class="chart-wrap" id="chartWrap">
+      <div class="charts-empty">Загружаем данные…</div>
+    </div>
+  </div>
+
+  <!-- История -->
+  <div class="history-section">
+    <h2>📜 Все записи</h2>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">Пока пусто — нажмите «Отложить»</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Модалка -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>💰 Отложить в копилку</h2>
+    <div class="form-row">
+      <label>Дата</label>
+      <input type="date" id="inpDate">
+    </div>
+    <div class="form-row">
+      <label>Сколько купюр</label>
+      <div class="bill-inputs">
+        <div class="bill-input" data-n="100">
+          <span class="lbl">100 ₽</span>
+          <input type="number" min="0" inputmode="numeric" value="0" id="inp100">
+        </div>
+        <div class="bill-input" data-n="200">
+          <span class="lbl">200 ₽</span>
+          <input type="number" min="0" inputmode="numeric" value="0" id="inp200">
+        </div>
+        <div class="bill-input" data-n="500">
+          <span class="lbl">500 ₽</span>
+          <input type="number" min="0" inputmode="numeric" value="0" id="inp500">
+        </div>
+        <div class="bill-input" data-n="1000">
+          <span class="lbl">1000 ₽</span>
+          <input type="number" min="0" inputmode="numeric" value="0" id="inp1000">
+        </div>
+      </div>
+    </div>
+    <div class="modal-total">
+      <span id="modalTotal">0</span> <small>₽</small>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelBtn">Отмена</button>
+      <button class="btn-save" id="saveBtn">Отложить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="syncing" id="syncing"><span class="spinner"></span> Синхронизация…</div>
+
+<script>
+(function() {
+  const TARGET_SUM = 300000;
+
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  let entries = [];
+  let summary = null;
+  let stats = null;
+  let currentUser = localStorage.getItem('kopilka_user') || 'Я';
+  let calView = new Date();
+  let currentTab = 'month';
+
+  const el = id => document.getElementById(id);
+  const savedAllEl = el('savedAll');
+  const savedMonthEl = el('savedMonth');
+  const savedWeekEl = el('savedWeek');
+  const remainingEl = el('remaining');
+  const progressFillEl = el('progressFill');
+  const progressPercentEl = el('progressPercent');
+  const cnt100 = el('cnt100'), cnt200 = el('cnt200'),
+        cnt500 = el('cnt500'), cnt1000 = el('cnt1000');
+  const calTitle = el('calTitle');
+  const calGrid = el('calGrid');
+  const chartWrap = el('chartWrap');
+  const historyList = el('historyList');
+  const toastEl = el('toast');
+  const syncingEl = el('syncing');
+  const onlineDot = el('onlineDot');
+  const onlineText = el('onlineText');
+  const modalBg = el('modalBg');
+  const inpDate = el('inpDate');
+  const inp100 = el('inp100'), inp200 = el('inp200'),
+        inp500 = el('inp500'), inp1000 = el('inp1000');
+  const modalTotal = el('modalTotal');
+
+  // ---- API ----
+  async function apiGet(url) {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error(url + ' ' + r.status);
+    return r.json();
+  }
+  async function apiAddEntry(entry) {
+    const r = await fetch('/api/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    });
+    if (!r.ok) throw new Error('add ' + r.status);
+    return r.json();
+  }
+  async function apiDeleteEntry(id) {
+    const r = await fetch('/api/entries', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, author: currentUser }),
+    });
+    if (!r.ok) throw new Error('del ' + r.status);
+    return r.json();
+  }
+
+  // ---- UI ----
+  function showToast(msg, isError) {
+    toastEl.textContent = msg;
+    toastEl.classList.toggle('error', !!isError);
+    toastEl.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toastEl.classList.remove('show'), 2200);
+  }
+  function showSyncing(v) { syncingEl.classList.toggle('show', v); }
+  function setOnline(v) {
+    onlineDot.classList.toggle('offline', !v);
+    onlineText.textContent = v ? 'Синхронизировано' : 'Офлайн';
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+  function fmtMoney(n) { return Math.round(n).toLocaleString('ru-RU'); }
+  function fmtShort(n) {
+    if (n >= 1000) return Math.round(n/100)/10 + 'k';
+    return String(Math.round(n));
+  }
+  function todayStr() {
+    const d = new Date();
+    const p = x => String(x).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  }
+
+  // ---- Обновление статистики ----
+  function updateStats(s) {
+    savedAllEl.textContent = fmtMoney(s.totalAll);
+    savedMonthEl.textContent = fmtMoney(s.totalMonth);
+    savedWeekEl.textContent = fmtMoney(s.totalWeek);
+    remainingEl.textContent = fmtMoney(s.remaining);
+    progressFillEl.style.width = s.percent + '%';
+    progressPercentEl.textContent = s.percent + '%';
+    cnt100.textContent = s.byNominal[100] || 0;
+    cnt200.textContent = s.byNominal[200] || 0;
+    cnt500.textContent = s.byNominal[500] || 0;
+    cnt1000.textContent = s.byNominal[1000] || 0;
+  }
+
+  // ---- Календарь ----
+  function renderCalendar() {
+    const year = calView.getFullYear();
+    const month = calView.getMonth();
+    const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                        'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    calTitle.textContent = monthNames[month] + ' ' + year;
+
+    const daySums = {};
+    for (const e of entries) {
+      daySums[e.date] = (daySums[e.date] || 0) + e.amount;
+    }
+
+    const firstDay = new Date(year, month, 1);
+    const startWeekday = (firstDay.getDay() + 6) % 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayStrVal = todayStr();
+
+    let html = '';
+    for (let i = 0; i < startWeekday; i++) html += '<div class="cal-day empty"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const p = x => String(x).padStart(2, '0');
+      const dateStr = `${year}-${p(month+1)}-${p(d)}`;
+      const sum = daySums[dateStr] || 0;
+      const classes = ['cal-day'];
+      if (dateStr === todayStrVal) classes.push('today');
+      if (sum > 0) classes.push('has-entry');
+      const sumLabel = sum > 0 ? `<div class="sum">${fmtShort(sum)}</div>` : '';
+      html += `
+        <div class="${classes.join(' ')}" data-date="${dateStr}">
+          <div class="num">${d}</div>
+          ${sumLabel}
+          ${sum > 0 ? '<div class="dot"></div>' : ''}
+        </div>`;
+    }
+    calGrid.innerHTML = html;
+
+    calGrid.querySelectorAll('.cal-day:not(.empty)').forEach(node => {
+      node.addEventListener('click', () => openModal(node.dataset.date));
+    });
+  }
+
+  function calPrevMonth() {
+    calView = new Date(calView.getFullYear(), calView.getMonth() - 1, 1);
+    renderCalendar();
+  }
+  function calNextMonth() {
+    calView = new Date(calView.getFullYear(), calView.getMonth() + 1, 1);
+    renderCalendar();
+  }
+  function calTodayMonth() {
+    calView = new Date();
+    renderCalendar();
+  }
+
+  // ---- Графики ----
+  function renderChart() {
+    if (!stats) {
+      chartWrap.innerHTML = '<div class="charts-empty">Загружаем данные…</div>';
+      return;
+    }
+
+    if (currentTab === 'month') {
+      renderBarChart(stats.byMonth, 'label', 'sum', 'Нет данных за последние 12 месяцев');
+    } else if (currentTab === 'week') {
+      renderBarChart(stats.byWeek, 'label', 'sum', 'Нет данных за последние 12 недель');
+    } else if (currentTab === 'cumulative') {
+      renderLineChart(stats.cumulative);
+    } else if (currentTab === 'weekday') {
+      renderBarChart(stats.weekdays, 'label', 'sum', 'Нет данных');
+    }
+  }
+
+  function renderBarChart(data, labelKey, valKey, emptyMsg) {
+    const values = data.map(d => d[valKey]);
+    const maxVal = Math.max(...values, 1);
+    const allZero = values.every(v => v === 0);
+
+    if (allZero) {
+      chartWrap.innerHTML = `<div class="charts-empty">${emptyMsg}</div>`;
+      return;
+    }
+
+    const html = `
+      <div class="bar-chart">
+        ${data.map(d => {
+          const h = Math.max(2, (d[valKey] / maxVal) * 100);
+          const val = d[valKey];
+          return `
+            <div class="bar-col" title="${fmtMoney(val)} ₽">
+              <div class="bar" style="height:${h}%">
+                ${val > 0 ? `<div class="bar-val">${fmtShort(val)}</div>` : ''}
+              </div>
+              <div class="bar-lbl">${d[labelKey]}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    `;
+    chartWrap.innerHTML = html;
+  }
+
+  function renderLineChart(data) {
+    const values = data.map(d => d.total);
+    const maxVal = Math.max(...values, 1);
+    const allZero = values.every(v => v === 0);
+
+    if (allZero) {
+      chartWrap.innerHTML = '<div class="charts-empty">Нет данных для накопления</div>';
+      return;
+    }
+
+    const W = chartWrap.clientWidth || 800;
+    const H = chartWrap.clientHeight || 220;
+    const padL = 8, padR = 8, padT = 20, padB = 30;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+    const n = data.length;
+
+    const x = i => padL + (n > 1 ? (i / (n - 1)) * innerW : innerW / 2);
+    const y = v => padT + innerH - (v / maxVal) * innerH;
+
+    const points = data.map((d, i) => ({ x: x(i), y: y(d.total), val: d.total, lbl: d.label }));
+
+    // Путь линии
+    const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+    // Путь области
+    const areaPath = `${linePath} L${points[points.length-1].x.toFixed(1)},${(padT+innerH).toFixed(1)} L${points[0].x.toFixed(1)},${(padT+innerH).toFixed(1)} Z`;
+
+    // Горизонтальные линии сетки
+    let gridHtml = '';
+    for (let i = 0; i <= 4; i++) {
+      const gy = padT + (innerH / 4) * i;
+      gridHtml += `<line class="grid-line" x1="${padL}" y1="${gy}" x2="${padL + innerW}" y2="${gy}" />`;
+    }
+
+    // Точки
+    const pointsHtml = points.map(p =>
+      `<circle class="point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"><title>${fmtMoney(p.val)} ₽</title></circle>`
+    ).join('');
+
+    // Подписи по X (каждый 2-й)
+    const labelsHtml = points.map((p, i) => {
+      if (i % 2 !== 0 && i !== n - 1) return '';
+      return `<text class="lbl" x="${p.x.toFixed(1)}" y="${(H - 8).toFixed(1)}" text-anchor="middle">${p.lbl}</text>`;
+    }).join('');
+
+    chartWrap.innerHTML = `
+      <svg class="line-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="gradientArea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2b7a9c" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#2b7a9c" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${gridHtml}
+        <path class="area" d="${areaPath}" />
+        <path class="line" d="${linePath}" />
+        ${pointsHtml}
+        ${labelsHtml}
+      </svg>
+    `;
+  }
+
+  // ---- История ----
+  function renderHistory() {
+    if (entries.length === 0) {
+      historyList.innerHTML =
+        '<div class="history-empty">Пока пусто — нажмите «Отложить»</div>';
+      return;
+    }
+    const sorted = [...entries].sort((a, b) =>
+      (b.date === a.date) ? (b.created_at - a.created_at) : (b.date > a.date ? 1 : -1)
+    );
+    historyList.innerHTML = sorted.map(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('ru-RU', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      });
+      const bills = [];
+      if (e.breakdown[1000]) bills.push(`${e.breakdown[1000]}×1000`);
+      if (e.breakdown[500])  bills.push(`${e.breakdown[500]}×500`);
+      if (e.breakdown[200])  bills.push(`${e.breakdown[200]}×200`);
+      if (e.breakdown[100])  bills.push(`${e.breakdown[100]}×100`);
+      return `
+        <div class="history-item">
+          <div>
+            <span class="who">${escapeHtml(e.author)}</span>
+            <div class="when">${dateStr} · ${bills.join(', ')}</div>
+          </div>
+          <div class="right">
+            <span class="amount">+${fmtMoney(e.amount)} ₽</span>
+            <button class="del" data-id="${e.id}" title="Удалить">✕</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    historyList.querySelectorAll('.del').forEach(btn => {
+      btn.addEventListener('click', async (ev) => {
+        ev.stopPropagation();
+        const id = btn.dataset.id;
+        if (!confirm('Удалить эту запись?')) return;
+        try {
+          await apiDeleteEntry(id);
+          showToast('Запись удалена');
+          await reload();
+        } catch (e) {
+          showToast('Ошибка удаления', true);
+        }
+      });
+    });
+  }
+
+  // ---- Модалка ----
+  function openModal(dateStr) {
+    inpDate.value = dateStr || todayStr();
+    inp100.value = 0; inp200.value = 0; inp500.value = 0; inp1000.value = 0;
+    updateModalTotal();
+    modalBg.classList.add('show');
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  }
+  function closeModal() { modalBg.classList.remove('show'); }
+  function updateModalTotal() {
+    const total =
+      (parseInt(inp100.value) || 0) * 100 +
+      (parseInt(inp200.value) || 0) * 200 +
+      (parseInt(inp500.value) || 0) * 500 +
+      (parseInt(inp1000.value) || 0) * 1000;
+    modalTotal.textContent = fmtMoney(total);
+    return total;
+  }
+
+  // ---- Загрузка ----
+  async function reload() {
+    showSyncing(true);
+    try {
+      const [e, s, st] = await Promise.all([
+        apiGet('/api/entries'),
+        apiGet('/api/summary'),
+        apiGet('/api/stats'),
+      ]);
+      entries = e.entries || [];
+      summary = s;
+      stats = st;
+      updateStats(summary);
+      renderCalendar();
+      renderHistory();
+      renderChart();
+      setOnline(true);
+    } catch (err) {
+      console.error(err);
+      setOnline(false);
+      showToast('Не удалось загрузить данные', true);
+    } finally {
+      showSyncing(false);
+    }
+  }
+
+  // ---- Инициализация ----
+  function init() {
+    // Пользователь
+    document.querySelectorAll('.user-picker button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.user === currentUser);
+      btn.addEventListener('click', () => {
+        currentUser = btn.dataset.user;
+        localStorage.setItem('kopilka_user', currentUser);
+        document.querySelectorAll('.user-picker button').forEach(b =>
+          b.classList.toggle('active', b === btn));
+      });
+    });
+
+    // Календарь
+    el('calPrev').addEventListener('click', calPrevMonth);
+    el('calNext').addEventListener('click', calNextMonth);
+    el('calToday').addEventListener('click', calTodayMonth);
+
+    // Табы графиков
+    document.querySelectorAll('#chartTabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentTab = btn.dataset.tab;
+        document.querySelectorAll('#chartTabs button').forEach(b =>
+          b.classList.toggle('active', b === btn));
+        renderChart();
+      });
+    });
+
+    // Модалка
+    el('openModalBtn').addEventListener('click', () => openModal());
+    el('cancelBtn').addEventListener('click', closeModal);
+    modalBg.addEventListener('click', e => {
+      if (e.target === modalBg) closeModal();
+    });
+    [inp100, inp200, inp500, inp1000].forEach(i => {
+      i.addEventListener('input', updateModalTotal);
+    });
+
+    // Сохранить
+    el('saveBtn').addEventListener('click', async () => {
+      const date = inpDate.value;
+      const breakdown = {
+        100: parseInt(inp100.value) || 0,
+        200: parseInt(inp200.value) || 0,
+        500: parseInt(inp500.value) || 0,
+        1000: parseInt(inp1000.value) || 0,
+      };
+      const total = updateModalTotal();
+      if (total <= 0) {
+        showToast('Введите хотя бы одну купюру', true);
+        return;
+      }
+      closeModal();
+      showSyncing(true);
+      try {
+        await apiAddEntry({ date, breakdown, author: currentUser });
+        showToast(`+${fmtMoney(total)} ₽ отложено`);
+        await reload();
+        if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      } catch (e) {
+        console.error(e);
+        showToast('Ошибка сохранения', true);
+        setOnline(false);
+      } finally {
+        showSyncing(false);
+      }
+    });
+
+    reload();
+    setInterval(() => {
+      if (document.hidden) return;
+      reload();
+    }, 7000);
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) reload();
+    });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
