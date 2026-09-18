@@ -6,556 +6,48 @@
 <title>Копилка и Бюджет</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      -webkit-tap-highlight-color: transparent; }
-  body { background: linear-gradient(145deg,#f6f9fc,#e9f1f8);
-         min-height:100vh; padding:0.75rem; color:#0b2b3f; }
-  .app { max-width: 900px; margin: 0 auto; }
-
-  /* ============ Шапка ============ */
-  .header {
-    background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
-    border-radius: 24px; padding: 1rem 1.25rem; margin-bottom: 1rem;
-    box-shadow: 0 10px 25px rgba(0,20,30,0.07);
-    border: 1px solid rgba(255,255,255,0.6);
-  }
-  .header-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-  .title h1 { font-size: 1.25rem; font-weight: 700;
-    background: linear-gradient(135deg,#0b2b3f,#1d5b7a);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .title .sub { font-size:0.75rem; color:#4a6b7c; margin-top:2px;
-    display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .online-badge { display:inline-flex; align-items:center; gap:5px;
-    font-size:0.7rem; color:#1d5b7a; }
-  .online-dot { width:7px; height:7px; border-radius:50%; background:#2ec27e;
-    box-shadow: 0 0 0 3px rgba(46,194,126,0.2); animation: pulse 1.8s infinite; }
-  .online-dot.offline { background:#e5484d;
-    box-shadow:0 0 0 3px rgba(229,72,77,0.2); animation: none; }
-  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
-
-  .add-btn {
-    background: linear-gradient(135deg,#2b7a9c,#1d5b7a); color:white;
-    border: none; border-radius: 100px; padding: 10px 18px;
-    font-size: 0.85rem; font-weight: 700; cursor: pointer;
-    box-shadow: 0 6px 15px rgba(29,91,122,0.3);
-    display: flex; align-items: center; gap: 6px;
-    transition: transform 0.15s; white-space: nowrap;
-  }
-  .add-btn:active { transform: scale(0.95); }
-
-  /* ============ Статистика копилки ============ */
-  .stats-grid {
-    display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-    margin-top: 14px;
-  }
-  .stat-box { background:#f6fafc; border-radius:14px; padding:10px 12px;
-    border:1px solid #e2ecf3; }
-  .stat-box .label { font-size:0.62rem; text-transform:uppercase;
-    letter-spacing:0.4px; color:#5b7e93; font-weight:700; }
-  .stat-box .value { font-size:1.05rem; font-weight:800; color:#0b2b3f;
-    line-height:1.2; margin-top:2px; }
-  .stat-box .value small { font-size:0.72rem; font-weight:600; color:#617e8f; }
-  .stat-box.accent { background: linear-gradient(135deg,#e6f3fa,#d4e9f5);
-    border-color:#9ac2d9; }
-  .stat-box.accent .value { color: #1d5b7a; }
-
-  .progress-bar-bg { height:10px; background:#e2ecf3; border-radius:100px;
-    overflow:hidden; margin-top:12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-  .progress-fill { height:100%; width:0%;
-    background: linear-gradient(90deg,#2b7a9c,#1d5b7a); border-radius:100px;
-    transition: width 0.3s ease; }
-  .progress-line { display:flex; justify-content:space-between;
-    font-size:0.72rem; color:#4a6b7c; font-weight:600; margin-top:6px; }
-
-  /* ============ Вкладки ============ */
-  .tabs {
-    display: flex; gap: 4px;
-    background: rgba(255,255,255,0.7);
-    padding: 6px; border-radius: 100px; margin-bottom: 1rem;
-    border: 1px solid #e2ecf3;
-    overflow-x: auto;
-  }
-  .tabs button {
-    flex: 1; border: none; background: transparent;
-    padding: 10px 10px; border-radius: 100px;
-    font-size: 0.78rem; font-weight: 700;
-    color: #4a6b7c; cursor: pointer;
-    transition: all 0.15s; white-space: nowrap;
-    min-width: 82px;
-  }
-  .tabs button.active {
-    background: linear-gradient(135deg,#2b7a9c,#1d5b7a);
-    color: white;
-    box-shadow: 0 4px 12px rgba(29,91,122,0.3);
-  }
-
-  /* ============ Карточки-секции ============ */
-  .section {
-    background: white; border-radius: 20px; padding: 1rem 1.1rem;
-    margin-bottom: 1rem; border: 1px solid rgba(210,225,235,0.6);
-    box-shadow: 0 8px 20px rgba(0,20,30,0.04);
-  }
-  .section h2, .section h3 {
-    font-size: 0.95rem; font-weight: 700; color:#0b2b3f;
-    margin-bottom: 12px;
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-  }
-
-  /* ============ Купюры копилки ============ */
-  .bills-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .bill-chip {
-    border-radius: 12px; padding: 8px 6px; text-align: center;
-    color: white; font-weight: 700; font-size: 0.75rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  .bill-chip[data-n="100"]  { background: linear-gradient(135deg,#c4a356,#9a7e3a); }
-  .bill-chip[data-n="200"]  { background: linear-gradient(135deg,#5b8ac9,#3a5f95); }
-  .bill-chip[data-n="500"]  { background: linear-gradient(135deg,#7e9c62,#587340); }
-  .bill-chip[data-n="1000"] { background: linear-gradient(135deg,#9a5b5b,#6e3a3a); }
-  .bill-chip .num { font-size: 1rem; line-height: 1; }
-  .bill-chip .lbl { font-size: 0.6rem; opacity: 0.9; margin-top: 3px;
-    text-transform: uppercase; letter-spacing: 0.3px; }
-
-  /* ============ Баланс бюджета ============ */
-  .balance-card {
-    background: linear-gradient(135deg, #2b7a9c, #1d5b7a);
-    color: white; border-radius: 22px;
-    padding: 1.25rem 1.4rem; margin-bottom: 1rem;
-    box-shadow: 0 12px 30px rgba(29,91,122,0.25);
-  }
-  .balance-card .label {
-    font-size: 0.75rem; text-transform: uppercase;
-    letter-spacing: 0.5px; opacity: 0.85;
-  }
-  .balance-card .value {
-    font-size: 2rem; font-weight: 800; line-height: 1.1; margin-top: 4px;
-  }
-  .balance-card .value.negative { color: #ffd5d5; }
-  .balance-card .row {
-    display: flex; gap: 1.5rem; margin-top: 12px;
-    padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);
-  }
-  .balance-card .row .col .label { font-size: 0.7rem; }
-  .balance-card .row .col .value {
-    font-size: 1.05rem; font-weight: 700; margin-top: 2px;
-  }
-  .balance-card .row .col .value.income { color: #b8f5d0; }
-  .balance-card .row .col .value.expense { color: #ffd5d5; }
-
-  /* ============ Список транзакций ============ */
-  .tx-list { display: flex; flex-direction: column; gap: 6px;
-    max-height: 500px; overflow-y: auto; }
-  .tx-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 12px; background: #f6fafc; border-radius: 14px;
-    border: 1px solid #e2ecf3; gap: 10px;
-  }
-  .tx-icon {
-    width: 40px; height: 40px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.15rem; flex-shrink: 0;
-  }
-  .tx-item.income .tx-icon  { background: #e6f8ee; }
-  .tx-item.expense .tx-icon { background: #fdeaea; }
-  .tx-info { flex: 1; min-width: 0; }
-  .tx-info .cat { font-weight: 700; font-size: 0.88rem; color: #0b2b3f; }
-  .tx-info .meta {
-    font-size: 0.72rem; color: #7a99ac; margin-top: 2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .tx-amount { font-weight: 800; font-size: 0.95rem;
-    text-align: right; white-space: nowrap; }
-  .tx-item.income .tx-amount  { color: #2ec27e; }
-  .tx-item.expense .tx-amount { color: #e5484d; }
-  .tx-delete {
-    background: transparent; border: none; color: #e5484d;
-    cursor: pointer; font-size: 1rem; padding: 4px 6px;
-    border-radius: 8px; margin-left: 4px;
-  }
-  .tx-delete:hover { background: rgba(229,72,77,0.1); }
-
-  /* ============ Календарь ============ */
-  .cal-head { display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 12px; }
-  .cal-title { font-size: 1rem; font-weight: 700; text-transform: capitalize; }
-  .cal-nav { display: flex; gap: 6px; }
-  .cal-nav button {
-    width: 34px; height: 34px; border-radius: 50%;
-    border: 1.5px solid #cbdae3; background: transparent;
-    cursor: pointer; font-size: 1rem; color: #2c4e62;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .cal-nav button:hover { background: #f6fafc; }
-
-  .cal-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-    margin-bottom: 6px;
-  }
-  .cal-weekdays div {
-    text-align: center; font-size: 0.65rem; font-weight: 700;
-    color: #7a99ac; text-transform: uppercase; padding: 4px 0;
-  }
-  .cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-  }
-  .cal-day {
-    aspect-ratio: 1 / 1.05; border-radius: 10px; background: #f6fafc;
-    border: 1.5px solid #e2ecf3; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 2px;
-    cursor: pointer; transition: all 0.15s; position: relative;
-    min-height: 48px;
-  }
-  .cal-day:hover { border-color: #b8d0df; transform: translateY(-1px); }
-  .cal-day.empty { background: transparent; border: none; cursor: default; }
-  .cal-day.empty:hover { transform: none; border: none; }
-  .cal-day.today { border-color: #2b7a9c; border-width: 2px; }
-  .cal-day.has-income  { background: #e6f8ee; border-color: #b8e6cc; }
-  .cal-day.has-expense { background: #fdeaea; border-color: #f5c8c8; }
-  .cal-day.has-both    { background: linear-gradient(135deg,#fdeaea 0%,#fdeaea 50%,#e6f8ee 50%,#e6f8ee 100%);
-    border-color: #b8d0df; }
-  .cal-day.has-savings { border-color: #c4a356; }
-  .cal-day .num { font-size: 0.75rem; font-weight: 700; color: #2c4e62;
-    line-height: 1; }
-  .cal-day .sums { font-size: 0.55rem; font-weight: 700; line-height: 1;
-    margin-top: 2px; text-align: center; }
-  .cal-day .sums .inc { color: #1b7a4b; }
-  .cal-day .sums .exp { color: #b03030; }
-  .cal-day .savings-dot {
-    position: absolute; bottom: 3px; left: 50%;
-    transform: translateX(-50%);
-    width: 5px; height: 5px; border-radius: 50%;
-    background: #c4a356;
-  }
-
-  /* ============ Категории в модалке ============ */
-  .cat-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
-  }
-  .cat-pick {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 4px; padding: 10px 4px; border-radius: 14px;
-    border: 1.5px solid #e2ecf3; background: #f6fafc;
-    cursor: pointer; transition: all 0.15s;
-  }
-  .cat-pick:hover { border-color: #b8d0df; }
-  .cat-pick.active {
-    border-color: #1d5b7a; background: #e6f3fa;
-    box-shadow: 0 0 0 2px rgba(29,91,122,0.15);
-  }
-  .cat-pick .emoji { font-size: 1.3rem; }
-  .cat-pick .lbl { font-size: 0.65rem; font-weight: 700;
-    color: #4a6b7c; text-align: center; line-height: 1.1; }
-
-  /* ============ Переключатель доход/расход ============ */
-  .type-toggle {
-    display: flex; gap: 6px; margin-bottom: 12px;
-    background: #f6fafc; padding: 4px; border-radius: 100px;
-  }
-  .type-toggle button {
-    flex: 1; border: none; background: transparent;
-    padding: 10px; border-radius: 100px;
-    font-size: 0.85rem; font-weight: 700;
-    color: #4a6b7c; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .type-toggle button.active {
-    background: white; color: #1d5b7a;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .type-toggle button.active.income {
-    background: #e6f8ee; color: #1b7a4b;
-  }
-  .type-toggle button.active.expense {
-    background: #fdeaea; color: #b03030;
-  }
-
-  /* ============ Модалки ============ */
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(10,30,45,0.55);
-    backdrop-filter: blur(4px);
-    display: none; align-items: center; justify-content: center;
-    padding: 1rem; z-index: 100;
-  }
-  .modal-bg.show { display: flex; }
-  .modal {
-    background: white; border-radius: 24px; padding: 1.5rem;
-    width: 100%; max-width: 440px;
-    max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-    animation: modalIn 0.25s ease;
-  }
-  @keyframes modalIn {
-    from { opacity:0; transform: translateY(20px) scale(0.96); }
-    to   { opacity:1; transform: none; }
-  }
-  .modal h2 { font-size: 1.15rem; font-weight: 700;
-    margin-bottom: 1rem; color:#0b2b3f; }
-  .form-row { margin-bottom: 12px; }
-  .form-row label { display: block; font-size: 0.78rem;
-    font-weight: 600; color:#4a6b7c; margin-bottom: 4px; }
-  .form-row input[type="date"],
-  .form-row input[type="text"],
-  .form-row input[type="number"] {
-    width: 100%; padding: 10px 12px; border-radius: 12px;
-    border: 1.5px solid #cbdae3; font-size: 0.9rem;
-    background: #f6fafc; color: #0b2b3f; outline: none;
-  }
-  .form-row input:focus { border-color: #2b7a9c; }
-
-  .amount-input-wrap { position: relative; }
-  .amount-input-wrap input {
-    padding: 14px 44px 14px 16px !important;
-    font-size: 1.4rem !important; font-weight: 800 !important;
-    text-align: right;
-  }
-  .amount-input-wrap .currency {
-    position: absolute; right: 16px; top: 50%;
-    transform: translateY(-50%); font-size: 1.1rem;
-    font-weight: 700; color: #7a99ac;
-  }
-
-  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
-  .modal-actions button {
-    flex: 1; padding: 12px; border-radius: 14px; font-size: 0.9rem;
-    font-weight: 700; cursor: pointer; border: none; transition: all 0.15s;
-  }
-  .btn-cancel { background: #f0f5f9; color: #4a6b7c; }
-  .btn-cancel:hover { background: #e2ecf3; }
-  .btn-save {
-    background: linear-gradient(135deg,#2b7a9c,#1d5b7a); color: white;
-    box-shadow: 0 6px 15px rgba(29,91,122,0.3);
-  }
-  .btn-save:active { transform: scale(0.97); }
-  .btn-danger {
-    background: linear-gradient(135deg,#e5484d,#b03030); color: white;
-  }
-
-  /* Купюры в модалке копилки */
-  .bill-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .bill-input {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 10px; border-radius: 12px;
-    border: 1.5px solid #cbdae3; background: #f6fafc;
-  }
-  .bill-input .lbl { font-size: 0.75rem; font-weight: 700; min-width: 44px; }
-  .bill-input input {
-    width: 100%; border: none; background: transparent;
-    font-size: 0.95rem; font-weight: 700; color:#0b2b3f;
-    text-align: right; outline: none;
-  }
-  .bill-input[data-n="100"] { border-color: #c4a356; }
-  .bill-input[data-n="200"] { border-color: #5b8ac9; }
-  .bill-input[data-n="500"] { border-color: #7e9c62; }
-  .bill-input[data-n="1000"]{ border-color: #9a5b5b; }
-
-  .modal-total {
-    text-align: center; padding: 12px; border-radius: 14px;
-    background: linear-gradient(135deg,#e6f3fa,#d4e9f5);
-    font-size: 1.3rem; font-weight: 800; color:#1d5b7a;
-    margin: 12px 0;
-  }
-  .modal-total small { font-size: 0.85rem;
-    font-weight: 600; color:#617e8f; }
-
-  /* ============ Категории-управление ============ */
-  .cat-manage-row {
-    display:flex; align-items:center; gap:12px;
-    padding:10px 12px; background:#f6fafc;
-    border-radius:12px; margin-bottom:6px;
-  }
-
-  /* ============ Графики ============ */
-  .chart-tabs {
-    display: flex; gap: 4px; margin-bottom: 12px;
-    background: #f6fafc; padding: 4px; border-radius: 100px;
-    overflow-x: auto;
-  }
-  .chart-tabs button {
-    flex: 1; border: none; background: transparent;
-    padding: 8px 10px; border-radius: 100px;
-    font-size: 0.72rem; font-weight: 600;
-    color: #4a6b7c; cursor: pointer;
-    white-space: nowrap; transition: all 0.15s;
-    min-width: 65px;
-  }
-  .chart-tabs button.active {
-    background: linear-gradient(135deg,#2b7a9c,#1d5b7a);
-    color: white;
-    box-shadow: 0 4px 10px rgba(29,91,122,0.25);
-  }
-  .chart-wrap { position: relative; height: 220px; margin-top: 8px; }
-  .bar-chart {
-    display: flex; align-items: flex-end; gap: 4px;
-    height: 100%; padding: 0 2px;
-    border-bottom: 1px solid #e2ecf3;
-  }
-  .bar-col {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end;
-    height: 100%; position: relative; min-width: 0;
-  }
-  .bar {
-    width: 100%; max-width: 40px;
-    background: linear-gradient(180deg,#2b7a9c,#1d5b7a);
-    border-radius: 6px 6px 0 0;
-    transition: all 0.3s ease; min-height: 2px;
-    position: relative;
-  }
-  .bar-val {
-    position: absolute; top: -18px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.6rem; font-weight: 700; color: #1d5b7a;
-    white-space: nowrap; opacity: 0; transition: opacity 0.2s;
-  }
-  .bar-col:hover .bar-val { opacity: 1; }
-  .bar-lbl {
-    font-size: 0.6rem; color: #7a99ac;
-    font-weight: 600; margin-top: 6px;
-    white-space: nowrap; transform: rotate(-45deg);
-    transform-origin: center; height: 18px;
-  }
-  .line-chart { width: 100%; height: 100%; overflow: visible; }
-  .line-chart .grid-line { stroke: #e2ecf3; stroke-width: 1; }
-  .line-chart .line { fill: none; stroke: #1d5b7a; stroke-width: 2.5;
-    stroke-linecap: round; stroke-linejoin: round; }
-  .line-chart .point { fill: #1d5b7a; stroke: white; stroke-width: 2; }
-  .line-chart .lbl { font-size: 9px; fill: #7a99ac; font-weight: 600; }
-  .charts-empty { text-align: center; color: #7a99ac;
-    padding: 40px 0; font-size: 0.85rem; }
-
-  /* Двойные бары (доход/расход) */
-  .bar-pair {
-    flex: 1; display: flex; gap: 2px; align-items: flex-end;
-    height: 100%; justify-content: center; min-width: 0;
-  }
-  .bar-pair .b {
-    width: 45%; max-width: 20px;
-    border-radius: 4px 4px 0 0; min-height: 2px;
-    transition: all 0.3s ease;
-  }
-  .bar-pair .b.income  { background: linear-gradient(180deg,#2ec27e,#1b7a4b); }
-  .bar-pair .b.expense { background: linear-gradient(180deg,#e5484d,#b03030); }
-
-  /* Категорийный список в статистике */
-  .cat-stat-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 6px 0;
-  }
-  .cat-stat-row .emoji { font-size: 1.2rem; width: 28px; text-align: center; }
-  .cat-stat-row .label { flex: 1; font-size: 0.82rem; font-weight: 600; }
-  .cat-stat-row .bar-bg {
-    flex: 1.2; height: 8px; background: #e2ecf3;
-    border-radius: 100px; overflow: hidden;
-  }
-  .cat-stat-row .bar-fill {
-    height: 100%; border-radius: 100px;
-    transition: width 0.3s;
-  }
-  .cat-stat-row .amount {
-    font-size: 0.8rem; font-weight: 700;
-    min-width: 75px; text-align: right;
-  }
-
-  /* ============ История ============ */
-  .history-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 12px; background:#f6fafc; border-radius: 12px;
-    font-size: 0.8rem; color:#2c4e62; gap: 10px;
-    margin-bottom: 6px;
-  }
-  .history-item .who { font-weight: 700; color:#1d5b7a; }
-  .history-item .when { font-size:0.68rem; color:#7a99ac; margin-top:1px; }
-  .history-item .right { text-align:right; white-space: nowrap; }
-  .history-item .amount { font-weight: 800; color: #1d5b7a; }
-  .history-item .del {
-    background: transparent; border: none; color: #e5484d;
-    cursor: pointer; font-size: 1.1rem; padding: 4px 8px;
-    border-radius: 8px; margin-left: 8px;
-  }
-  .history-item .del:hover { background: rgba(229,72,77,0.1); }
-  .history-empty { color:#7a99ac; font-size:0.82rem;
-    text-align:center; padding:16px; }
-
-  /* ============ Тосты / синхронизация ============ */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #1d5b7a; color: white; padding: 12px 22px;
-    border-radius: 100px; font-size: 0.85rem; font-weight: 600;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    opacity: 0; transition: all 0.3s ease;
-    z-index: 1000; pointer-events: none;
-    max-width: 90vw; text-align: center;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #e5484d; }
-
-  .syncing {
-    position: fixed; top: 16px; right: 16px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(8px);
-    padding: 8px 14px; border-radius: 100px;
-    font-size: 0.75rem; color:#2c4e62; font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    display: flex; align-items: center; gap: 8px;
-    opacity: 0; transition: opacity 0.3s;
-    z-index: 999; pointer-events: none;
-  }
-  .syncing.show { opacity: 1; }
-  .spinner {
-    width: 11px; height: 11px;
-    border: 2px solid #cbdae3; border-top-color: #1d5b7a;
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ============ Пользователь ============ */
-  .user-picker {
-    display:flex; gap:6px; margin-bottom:1rem;
-    background: rgba(255,255,255,0.7);
-    padding:6px; border-radius:100px; width:fit-content;
-    border: 1px solid #e2ecf3;
-  }
-  .user-picker button {
-    border:none; background:transparent; border-radius:100px;
-    padding:7px 16px; font-size:0.82rem; color:#2c4e62;
-    cursor:pointer; font-weight:600; transition: all 0.15s;
-  }
-  .user-picker button.active { background: #1d5b7a; color: white; }
-
-  /* ============ Emoji / Color picker ============ */
-  .emoji-grid {
-    display:flex; gap:6px; flex-wrap:wrap;
-  }
-  .emoji-grid button {
-    width:38px; height:38px; border-radius:10px;
-    border:1.5px solid #e2ecf3; background:#f6fafc;
-    font-size:1.1rem; cursor:pointer;
-  }
-  .emoji-grid button.active {
-    border-color:#1d5b7a; background:#e6f3fa;
-    box-shadow: 0 0 0 2px rgba(29,91,122,0.15);
-  }
-  .color-grid { display:flex; gap:6px; flex-wrap:wrap; }
-  .color-grid button {
-    width:32px; height:32px; border-radius:50%;
-    border:3px solid transparent; cursor:pointer;
-  }
-  .color-grid button.active { border-color: #0b2b3f; }
-
-  @media (max-width: 480px) {
-    .title h1 { font-size: 1.05rem; }
-    .stat-box .value { font-size: 0.92rem; }
-    .stat-box { padding: 8px 10px; }
-    .cal-day { min-height: 42px; }
-    .cal-day .num { font-size: 0.68rem; }
-    .cal-day .sums { font-size: 0.5rem; }
-    .chart-wrap { height: 180px; }
-    .balance-card .value { font-size: 1.6rem; }
-    .tabs button { font-size: 0.7rem; padding: 8px; min-width: 68px; }
-  }
+:root{
+  --bg:#f4f6f8;--surface:#fff;--surface-2:#f8fafb;--surface-3:#eef2f5;
+  --text:#18212b;--muted:#71808d;--border:#e3e8ed;--primary:#2563eb;--primary-2:#1d4ed8;
+  --primary-soft:#eaf1ff;--success:#16845a;--success-soft:#e7f6ef;--danger:#c83b46;--danger-soft:#fcecef;
+  --warning:#a66a00;--shadow:0 8px 30px rgba(25,35,45,.06);--shadow-lg:0 18px 50px rgba(25,35,45,.12);
+  --radius:18px;--radius-sm:12px;--sidebar:228px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}body{background:var(--bg);min-height:100vh;color:var(--text);font-size:14px;line-height:1.45}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 25%,transparent);outline-offset:2px}
+.app{max-width:1220px;margin:0 auto;min-height:100vh;padding:24px;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);grid-template-rows:auto 1fr;gap:18px 24px}
+#tabs{grid-column:1;grid-row:1/3;align-self:start;position:sticky;top:24px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;z-index:20}
+.nav-brand{padding:8px 10px 13px;border-bottom:1px solid var(--border);margin-bottom:5px}.nav-brand strong{display:block;font-size:1rem;letter-spacing:-.02em}.nav-brand span{display:block;color:var(--muted);font-size:.65rem;margin-top:2px;font-weight:700}.tabs button{width:100%;border:0;background:transparent;color:var(--muted);padding:12px 13px;border-radius:12px;text-align:left;font-size:.88rem;font-weight:700;transition:.18s;display:flex;align-items:center;gap:10px}
+.tabs button:hover{background:var(--surface-2);color:var(--text)}.tabs button.active{background:var(--primary);color:#fff;box-shadow:0 8px 18px color-mix(in srgb,var(--primary) 24%,transparent)}
+.header{grid-column:2;grid-row:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 22px;box-shadow:var(--shadow);position:relative}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.title h1{font-size:1.25rem;line-height:1.2;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.title .sub{font-size:.76rem;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.online-badge{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted)}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px var(--success-soft);animation:pulse 1.8s infinite}.online-dot.offline{background:var(--danger);box-shadow:0 0 0 3px var(--danger-soft);animation:none}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.header-actions{display:flex;align-items:center;gap:8px}.add-btn{border:0;background:var(--primary);color:#fff;border-radius:11px;padding:10px 14px;font-size:.82rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 7px 16px color-mix(in srgb,var(--primary) 22%,transparent);transition:.16s}.add-btn:hover{background:var(--primary-2);transform:translateY(-1px)}.add-btn:active{transform:scale(.97)}
+.icon-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);color:var(--text);font-size:1rem;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{background:var(--surface-3)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat-box{background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:11px 13px}.stat-box .label{font-size:.62rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:800}.stat-box .value{font-size:1.05rem;font-weight:800;color:var(--text);line-height:1.2;margin-top:3px}.stat-box .value small{font-size:.7rem;color:var(--muted)}.stat-box.accent{background:var(--primary-soft);border-color:color-mix(in srgb,var(--primary) 18%,var(--border))}.stat-box.accent .value{color:var(--primary)}
+.progress-bar-bg{height:8px;background:var(--surface-3);border-radius:99px;overflow:hidden;margin-top:16px}.progress-fill{height:100%;background:var(--primary);border-radius:99px;transition:width .3s}.progress-line{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);font-weight:700;margin-top:7px}
+#tabContent{grid-column:2;grid-row:2;min-width:0}.section{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}.section h2,.section h3{font-size:.92rem;font-weight:800;color:var(--text);margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}.section h2::after{content:"";flex:1;max-width:0}
+.bills-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.bill-chip{border-radius:12px;padding:11px 7px;text-align:center;color:#fff;font-weight:800;font-size:.75rem;box-shadow:none}.bill-chip[data-n="100"]{background:#8b7440}.bill-chip[data-n="200"]{background:#466b9f}.bill-chip[data-n="500"]{background:#5f7d48}.bill-chip[data-n="1000"]{background:#824d4d}.bill-chip .num{font-size:1rem;line-height:1}.bill-chip .lbl{font-size:.58rem;opacity:.88;margin-top:4px;text-transform:uppercase;letter-spacing:.3px}
+.chart-tabs{display:flex;gap:4px;background:var(--surface-3);border-radius:11px;padding:4px;margin-bottom:14px;overflow:auto}.chart-tabs button{border:0;background:transparent;color:var(--muted);padding:8px 11px;border-radius:8px;font-size:.72rem;font-weight:800;white-space:nowrap}.chart-tabs button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(20,30,40,.08)}
+.chart-wrap{min-height:230px}.charts-empty,.history-empty{min-height:180px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.82rem;background:var(--surface-2);border:1px dashed var(--border);border-radius:13px}.bar-chart{height:220px;display:flex;align-items:flex-end;gap:7px;padding:18px 3px 0;overflow-x:auto}.bar-col{height:100%;min-width:30px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}.bar{width:min(30px,80%);min-height:2px;background:var(--primary);border-radius:6px 6px 3px 3px;position:relative}.bar-val{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:.56rem;color:var(--muted);font-weight:800;white-space:nowrap;margin-bottom:3px}.bar-lbl{font-size:.58rem;color:var(--muted);white-space:nowrap}.line-chart{width:100%;height:220px;display:block}.grid-line{stroke:var(--border);stroke-width:1}.line{fill:none;stroke:var(--primary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.point{fill:var(--primary);stroke:var(--surface);stroke-width:2}.line-chart .lbl{fill:var(--muted);font-size:9px}
+.history-item,.tx-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid var(--border)}.history-item:last-child,.tx-item:last-child{border-bottom:0}.history-item .who{font-size:.8rem;font-weight:800}.history-item .when,.tx-item .when{font-size:.68rem;color:var(--muted);margin-top:2px}.history-item .right,.tx-item .right{display:flex;align-items:center;gap:9px}.amount{font-size:.82rem;font-weight:850;color:var(--success)}.del{width:28px;height:28px;border:0;border-radius:8px;background:var(--danger-soft);color:var(--danger);font-weight:800}.balance-card{background:var(--text);color:#fff;border-radius:17px;padding:19px 20px}.balance-card .label{font-size:.68rem;color:rgba(255,255,255,.6);font-weight:800;text-transform:uppercase;letter-spacing:.4px}.balance-card .value{font-size:1.65rem;font-weight:850;line-height:1.15;margin-top:4px}.balance-card .value.negative{color:#ff9da4}.balance-card .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:17px;padding-top:13px;border-top:1px solid rgba(255,255,255,.12)}.balance-card .row .value{font-size:.9rem;margin-top:2px}.balance-card .value.income{color:#8fe0b9}.balance-card .value.expense{color:#ff9da4}
+.tx-list{display:flex;flex-direction:column}.tx-item .icon{width:36px;height:36px;border-radius:10px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex:0 0 auto}.tx-item .main{display:flex;align-items:center;gap:10px;min-width:0}.tx-item .name{font-size:.8rem;font-weight:800}.tx-item .note{font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}.tx-item .right .income{color:var(--success)}.tx-item .right .expense{color:var(--danger)}
+#budgetCatIncome,#budgetCatExpense{display:flex;flex-direction:column;gap:7px}.cat-manage-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:700}.cat-manage-item button{border:0;background:transparent;color:var(--danger);font-weight:800}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.cal-nav{display:flex;gap:5px}.cal-nav button{width:34px;height:34px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);color:var(--text)}.cal-title{font-size:1rem;font-weight:850}.cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0 5px}.cal-weekdays>div{text-align:center;color:var(--muted);font-size:.6rem;font-weight:800;padding:3px}.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.cal-day{min-height:58px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);padding:6px;cursor:pointer;transition:.15s}.cal-day:hover{border-color:color-mix(in srgb,var(--primary) 35%,var(--border));transform:translateY(-1px)}.cal-day.today{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}.cal-day.muted{opacity:.42}.cal-day .num{font-size:.7rem;font-weight:850}.cal-day .sums{display:flex;flex-direction:column;gap:1px;margin-top:5px;font-size:.54rem;font-weight:800}.cal-day .income{color:var(--success)}.cal-day .expense{color:var(--danger)}
+.theme-panel{position:fixed;top:22px;right:max(22px,calc((100vw - 1220px)/2 + 22px));width:245px;background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:13px;box-shadow:var(--shadow-lg);display:none;z-index:100}.theme-panel.show{display:block;animation:pop .16s ease}@keyframes pop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:none}}.theme-panel-title{font-size:.72rem;font-weight:850;color:var(--muted);margin-bottom:9px}.theme-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.theme-option{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:9px;text-align:left;font-size:.72rem;font-weight:800;display:flex;align-items:center;gap:7px}.theme-option.active{border-color:var(--primary);background:var(--primary-soft)}.theme-dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}.theme-dot.light{background:#5b73f2}.theme-dot.dark{background:#202738}.theme-dot.pink{background:#e65a91}.theme-dot.green{background:#2b9a76}
+.modal-bg{position:fixed;inset:0;background:rgba(10,18,25,.48);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:200}.modal-bg.show{display:flex}.modal{width:min(100%,500px);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow-lg)}.modal h2{font-size:1.05rem;margin-bottom:18px}.form-row{margin-bottom:15px}.form-row label{display:block;font-size:.72rem;font-weight:800;color:var(--muted);margin-bottom:6px}.form-row input{width:100%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:11px 12px;font-size:.82rem}.form-row input:focus{border-color:var(--primary);background:var(--surface)}.bill-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.bill-input{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:8px;text-align:center}.bill-input .lbl{display:block;font-size:.65rem;font-weight:800;color:var(--muted);margin-bottom:5px}.bill-input input{text-align:center;padding:8px}.modal-total{text-align:center;font-size:1.65rem;font-weight:900;padding:13px;border-radius:12px;background:var(--primary-soft);color:var(--primary);margin:8px 0 16px}.modal-total small{font-size:.75rem}.modal-actions{display:flex;gap:8px}.btn-cancel,.btn-save{flex:1;border:0;border-radius:10px;padding:11px;font-size:.8rem;font-weight:850}.btn-cancel{background:var(--surface-3);color:var(--text)}.btn-save{background:var(--primary);color:#fff}.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--surface-3);padding:4px;border-radius:11px;margin-bottom:15px}.type-toggle button{border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;font-size:.76rem;font-weight:800}.type-toggle button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(20,30,40,.08)}.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cat-grid button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:9px 5px;font-size:.72rem;font-weight:750}.cat-grid button.active{border-color:var(--primary);background:var(--primary-soft)}.emoji-grid,.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}.emoji-grid button,.color-grid button{border:1px solid var(--border);background:var(--surface-2);border-radius:8px;min-height:34px}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:10px;padding:9px 13px;font-size:.75rem;font-weight:750;z-index:300;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.syncing{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-10px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:99px;padding:7px 11px;font-size:.68rem;z-index:300;transition:.2s}.syncing.show{opacity:1;transform:translateX(-50%) translateY(0)}.spinner{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px}@keyframes spin{to{transform:rotate(360deg)}}
+body[data-theme="dark"]{--bg:#0d1117;--surface:#151b23;--surface-2:#10161e;--surface-3:#1c2530;--text:#edf2f7;--muted:#8e9aa7;--border:#27313d;--primary:#6f8cff;--primary-2:#5d7cff;--primary-soft:#1c2948;--success:#5bd09a;--success-soft:#153427;--danger:#ff7882;--danger-soft:#3b1d23;--shadow:0 8px 30px rgba(0,0,0,.18);--shadow-lg:0 18px 50px rgba(0,0,0,.4)}
+body[data-theme="pink"]{--primary:#d84f88;--primary-2:#c83f77;--primary-soft:#fdeaf2;--success:#16845a;--success-soft:#e7f6ef}
+body[data-theme="green"]{--primary:#198765;--primary-2:#117052;--primary-soft:#e7f6ef;--success:#16845a;--success-soft:#e7f6ef}
+body[data-theme="dark"] .balance-card{background:#0b1016}
+@media(max-width:760px){
+ .app{display:block;padding:12px 12px 86px}.header{margin-bottom:12px;padding:16px}.header-top{align-items:center}.title h1{font-size:1.05rem}.header-actions .add-btn{padding:9px 11px;font-size:.72rem}.stats-grid{gap:6px}.stat-box{padding:9px 8px}.stat-box .value{font-size:.88rem}
+ #tabs .nav-brand{display:none} #tabs{position:fixed;left:10px;right:10px;bottom:10px;top:auto;z-index:150;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.15)}.tabs button{justify-content:center;text-align:center;padding:9px 4px;font-size:.68rem;gap:4px}.tabs button.active{box-shadow:none}
+ .section{padding:14px;margin-bottom:10px}.bills-row{gap:6px}.bill-chip{padding:9px 4px}.bill-chip .num{font-size:.9rem}.chart-wrap{min-height:205px}.bar-chart,.line-chart{height:195px}.balance-card .value{font-size:1.4rem}.tx-item .note{max-width:170px}.cal-weekdays{gap:3px}.cal-grid{gap:3px}.cal-day{min-height:46px;padding:5px}.cal-day .sums{display:none}.theme-panel{top:auto;bottom:72px;right:12px;width:220px}.modal{padding:17px;border-radius:17px}.bill-inputs{gap:5px}.emoji-grid,.color-grid{grid-template-columns:repeat(6,1fr)}
+}
+@media(max-width:420px){.header-actions .add-btn{font-size:0;width:38px;height:38px;padding:0}.header-actions .add-btn:first-letter{font-size:1.1rem}.stats-grid .label{font-size:.54rem}.stats-grid .value{font-size:.78rem}.bills-row{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(2,1fr)}.balance-card .row{gap:10px}}
 </style>
 </head>
 <body>
@@ -563,13 +55,22 @@
 
   <!-- ============ Шапка (динамическая, зависит от вкладки) ============ -->
   <div class="header" id="header"></div>
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-title">Тема оформления</div>
+    <div class="theme-options">
+      <button class="theme-option" data-theme-choice="light"><span class="theme-dot light"></span>Светлая</button>
+      <button class="theme-option" data-theme-choice="dark"><span class="theme-dot dark"></span>Тёмная</button>
+      <button class="theme-option" data-theme-choice="pink"><span class="theme-dot pink"></span>Розовая</button>
+      <button class="theme-option" data-theme-choice="green"><span class="theme-dot green"></span>Зелёная</button>
+    </div>
+  </div>
 
   <!-- ============ Вкладки ============ -->
   <div class="tabs" id="tabs">
+    <div class="nav-brand"><strong>Копилка</strong><span>Финансы</span></div>
     <button data-tab="savings" class="active">🏦 Копилка</button>
-    <button data-tab="budget">💰 Бюджет</button>
+    <button data-tab="budget">💳 Бюджет</button>
     <button data-tab="calendar">📅 Календарь</button>
-    <button data-tab="categories">🏷️ Категории</button>
   </div>
 
   <!-- ============ Содержимое вкладки ============ -->
@@ -761,6 +262,43 @@
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); }
 
+
+  // ============ Темы оформления ============
+  function applyTheme(theme) {
+    const allowed = ['light','dark','pink','green'];
+    if (!allowed.includes(theme)) theme = 'light';
+    document.body.dataset.theme = theme === 'light' ? 'light' : theme;
+    localStorage.setItem('kopilka_theme', theme);
+    document.querySelectorAll('.theme-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.themeChoice === theme);
+    });
+  }
+
+  function openThemePanel() {
+    const panel = $('themePanel');
+    panel.classList.toggle('show');
+    const current = localStorage.getItem('kopilka_theme') || 'light';
+    document.querySelectorAll('.theme-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.themeChoice === current);
+    });
+  }
+
+  function initTheme() {
+    applyTheme(localStorage.getItem('kopilka_theme') || 'light');
+    document.querySelectorAll('.theme-option').forEach(btn => {
+      btn.onclick = () => {
+        applyTheme(btn.dataset.themeChoice);
+        $('themePanel').classList.remove('show');
+        vibrate('light');
+      };
+    });
+    document.addEventListener('click', e => {
+      if (!$('themePanel').contains(e.target) && !e.target.closest('#themeBtn')) {
+        $('themePanel').classList.remove('show');
+      }
+    });
+  }
+
   // ============ Состояние ============
   const STATE = {
     tab: 'savings',
@@ -898,7 +436,10 @@
     if (STATE.tab === 'savings')    renderSavingsTab();
     if (STATE.tab === 'budget')     renderBudgetTab();
     if (STATE.tab === 'calendar')   renderCalendarTab();
-    if (STATE.tab === 'categories') renderCategoriesTab();
+    if (STATE.tab === 'categories') renderBudgetTab();
+
+    const themeBtn = $('themeBtn');
+    if (themeBtn) themeBtn.onclick = openThemePanel;
   }
 
   // =================================================================
@@ -918,7 +459,10 @@
             </span>
           </div>
         </div>
-        <button class="add-btn" id="openSavingsBtn">＋ Отложить</button>
+        <div class="header-actions">
+          <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
+          <button class="add-btn" id="openSavingsBtn">＋ Отложить</button>
+        </div>
       </div>
       <div class="stats-grid">
         <div class="stat-box accent">
@@ -1188,10 +732,10 @@
           </div>
         </div>
       </div>
-      <button class="add-btn" id="openTxBtn"
-        style="width:100%;justify-content:center;">
-        ＋ Добавить операцию
-      </button>
+      <div class="header-actions" style="justify-content:flex-end;margin-top:10px;">
+        <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
+        <button class="add-btn" id="openTxBtn">＋ Добавить операцию</button>
+      </div>
     `;
     $('openTxBtn').onclick = () => openTxModal();
 
@@ -1217,8 +761,22 @@
       </div>
 
       <div class="section">
-        <h2>📝 Операции за месяц (${monthTxs.length})</h2>
+        <h2>📝 Операции за месяц <span style="font-size:.72rem;color:var(--muted);">(${monthTxs.length})</span></h2>
         <div class="tx-list" id="txList"></div>
+      </div>
+
+      <div class="section">
+        <h2>🏷️ Категории <button class="icon-btn" id="budgetAddCat" style="width:34px;height:34px;font-size:1rem;">＋</button></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-size:.72rem;font-weight:800;color:var(--success);margin-bottom:7px;">Доходы</div>
+            <div id="budgetCatIncome"></div>
+          </div>
+          <div>
+            <div style="font-size:.72rem;font-weight:800;color:var(--danger);margin-bottom:7px;">Расходы</div>
+            <div id="budgetCatExpense"></div>
+          </div>
+        </div>
       </div>
     `;
 
@@ -1232,6 +790,11 @@
     });
 
     renderTxList(monthTxs);
+
+    // Управление категориями перенесено сюда, чтобы не держать отдельную вкладку.
+    renderCatManageList('income', 'budgetCatIncome');
+    renderCatManageList('expense', 'budgetCatExpense');
+    $('budgetAddCat').onclick = () => openCatModal();
   }
 
   function renderTxList(txs) {
@@ -1445,6 +1008,7 @@
             </span>
           </div>
         </div>
+        <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
       </div>
     `;
 
@@ -1719,7 +1283,10 @@
             <span>Ваши личные категории</span>
           </div>
         </div>
-        <button class="add-btn" id="openCatBtn">＋ Категория</button>
+        <div class="header-actions">
+          <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
+          <button class="add-btn" id="openCatBtn">＋ Категория</button>
+        </div>
       </div>
     `;
     $('openCatBtn').onclick = () => openCatModal();
@@ -1870,6 +1437,8 @@
   // ==================== ИНИЦИАЛИЗАЦИЯ ==============================
   // =================================================================
   function init() {
+    initTheme();
+
     // Вкладки
     document.querySelectorAll('.tabs button').forEach(btn => {
       btn.onclick = () => switchTab(btn.dataset.tab);
