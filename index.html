@@ -28,33 +28,110 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus
 .icon-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);color:var(--text);font-size:1rem;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{background:var(--surface-3)}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat-box{background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:11px 13px}.stat-box .label{font-size:.62rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:800}.stat-box .value{font-size:1.05rem;font-weight:800;color:var(--text);line-height:1.2;margin-top:3px}.stat-box .value small{font-size:.7rem;color:var(--muted)}.stat-box.accent{background:var(--primary-soft);border-color:color-mix(in srgb,var(--primary) 18%,var(--border))}.stat-box.accent .value{color:var(--primary)}
 .progress-bar-bg{height:8px;background:var(--surface-3);border-radius:99px;overflow:hidden;margin-top:16px}.progress-fill{height:100%;background:var(--primary);border-radius:99px;transition:width .3s}.progress-line{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);font-weight:700;margin-top:7px}
-#tabContent{grid-column:2;grid-row:2;min-width:0}.section{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}.section h2,.section h3{font-size:.92rem;font-weight:800;color:var(--text);margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}.section h2::after{content:"";flex:1;max-width:0}
+#tabContent{grid-column:2;grid-row:2;min-width:0}.section{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}.section h2,.section h3{font-size:.92rem;font-weight:800;color:var(--text);margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .bills-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.bill-chip{border-radius:12px;padding:11px 7px;text-align:center;color:#fff;font-weight:800;font-size:.75rem;box-shadow:none}.bill-chip[data-n="100"]{background:#8b7440}.bill-chip[data-n="200"]{background:#466b9f}.bill-chip[data-n="500"]{background:#5f7d48}.bill-chip[data-n="1000"]{background:#824d4d}.bill-chip .num{font-size:1rem;line-height:1}.bill-chip .lbl{font-size:.58rem;opacity:.88;margin-top:4px;text-transform:uppercase;letter-spacing:.3px}
 .chart-tabs{display:flex;gap:4px;background:var(--surface-3);border-radius:11px;padding:4px;margin-bottom:14px;overflow:auto}.chart-tabs button{border:0;background:transparent;color:var(--muted);padding:8px 11px;border-radius:8px;font-size:.72rem;font-weight:800;white-space:nowrap}.chart-tabs button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(20,30,40,.08)}
 .chart-wrap{min-height:230px}.charts-empty,.history-empty{min-height:180px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.82rem;background:var(--surface-2);border:1px dashed var(--border);border-radius:13px}.bar-chart{height:220px;display:flex;align-items:flex-end;gap:7px;padding:18px 3px 0;overflow-x:auto}.bar-col{height:100%;min-width:30px;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}.bar{width:min(30px,80%);min-height:2px;background:var(--primary);border-radius:6px 6px 3px 3px;position:relative}.bar-val{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:.56rem;color:var(--muted);font-weight:800;white-space:nowrap;margin-bottom:3px}.bar-lbl{font-size:.58rem;color:var(--muted);white-space:nowrap}.line-chart{width:100%;height:220px;display:block}.grid-line{stroke:var(--border);stroke-width:1}.line{fill:none;stroke:var(--primary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.point{fill:var(--primary);stroke:var(--surface);stroke-width:2}.line-chart .lbl{fill:var(--muted);font-size:9px}
-.history-item,.tx-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid var(--border)}.history-item:last-child,.tx-item:last-child{border-bottom:0}.history-item .who{font-size:.8rem;font-weight:800}.history-item .when,.tx-item .when{font-size:.68rem;color:var(--muted);margin-top:2px}.history-item .right,.tx-item .right{display:flex;align-items:center;gap:9px}.amount{font-size:.82rem;font-weight:850;color:var(--success)}.del{width:28px;height:28px;border:0;border-radius:8px;background:var(--danger-soft);color:var(--danger);font-weight:800}.balance-card{background:var(--text);color:#fff;border-radius:17px;padding:19px 20px}.balance-card .label{font-size:.68rem;color:rgba(255,255,255,.6);font-weight:800;text-transform:uppercase;letter-spacing:.4px}.balance-card .value{font-size:1.65rem;font-weight:850;line-height:1.15;margin-top:4px}.balance-card .value.negative{color:#ff9da4}.balance-card .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:17px;padding-top:13px;border-top:1px solid rgba(255,255,255,.12)}.balance-card .row .value{font-size:.9rem;margin-top:2px}.balance-card .value.income{color:#8fe0b9}.balance-card .value.expense{color:#ff9da4}
-.tx-list{display:flex;flex-direction:column}.tx-item .icon{width:36px;height:36px;border-radius:10px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex:0 0 auto}.tx-item .main{display:flex;align-items:center;gap:10px;min-width:0}.tx-item .name{font-size:.8rem;font-weight:800}.tx-item .note{font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}.tx-item .right .income{color:var(--success)}.tx-item .right .expense{color:var(--danger)}
-#budgetCatIncome,#budgetCatExpense{display:flex;flex-direction:column;gap:7px}.cat-manage-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:700}.cat-manage-item button{border:0;background:transparent;color:var(--danger);font-weight:800}
-.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.cal-nav{display:flex;gap:5px}.cal-nav button{width:34px;height:34px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);color:var(--text)}.cal-title{font-size:1rem;font-weight:850}.cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0 5px}.cal-weekdays>div{text-align:center;color:var(--muted);font-size:.6rem;font-weight:800;padding:3px}.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.cal-day{min-height:58px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);padding:6px;cursor:pointer;transition:.15s}.cal-day:hover{border-color:color-mix(in srgb,var(--primary) 35%,var(--border));transform:translateY(-1px)}.cal-day.today{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}.cal-day.muted{opacity:.42}.cal-day .num{font-size:.7rem;font-weight:850}.cal-day .sums{display:flex;flex-direction:column;gap:1px;margin-top:5px;font-size:.54rem;font-weight:800}.cal-day .income{color:var(--success)}.cal-day .expense{color:var(--danger)}
+.bar-pair{display:flex;gap:3px;align-items:flex-end;width:100%;height:100%;justify-content:center}.bar-pair .b{width:45%;max-width:20px;min-height:2px;border-radius:4px 4px 2px 2px}.bar-pair .b.income{background:var(--success)}.bar-pair .b.expense{background:var(--danger)}
+
+/* ============ Транзакции (в списке и в модалке дня) ============ */
+.tx-list{display:flex;flex-direction:column}
+.tx-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid var(--border)}
+.tx-item:last-child{border-bottom:0}
+.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex:0 0 auto}
+.tx-info{flex:1;min-width:0}
+.tx-info .cat{font-size:.8rem;font-weight:800;color:var(--text)}
+.tx-info .meta{font-size:.68rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px}
+.tx-amount{font-size:.82rem;font-weight:850;white-space:nowrap}
+.tx-item.income  .tx-amount{color:var(--success)}
+.tx-item.expense .tx-amount{color:var(--danger)}
+.tx-delete{width:28px;height:28px;border:0;border-radius:8px;background:var(--danger-soft);color:var(--danger);font-weight:800;margin-left:4px}
+
+/* ============ Выбор категории в модалке ============ */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.cat-pick{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 4px;border:1px solid var(--border);background:var(--surface-2);border-radius:10px;cursor:pointer;transition:.15s;text-align:center}
+.cat-pick:hover{border-color:color-mix(in srgb,var(--primary) 40%,var(--border))}
+.cat-pick.active{border-color:var(--primary);background:var(--primary-soft)}
+.cat-pick .emoji{font-size:1.1rem;line-height:1}
+.cat-pick .lbl{font-size:.66rem;font-weight:750;color:var(--text);line-height:1.1;word-break:break-word}
+
+/* ============ Управление категориями ============ */
+.cat-manage-row{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface-2);border:1px solid var(--border);border-radius:11px;margin-bottom:7px}
+.cat-manage-row .cat-del{border:0;background:transparent;color:var(--danger);font-weight:800;cursor:pointer;font-size:1rem;padding:4px 8px;border-radius:6px}
+.cat-manage-row .cat-del:hover{background:var(--danger-soft)}
+
+/* ============ Топ расходов ============ */
+.cat-stat-row{display:flex;align-items:center;gap:10px;padding:7px 0}
+.cat-stat-row .emoji{font-size:1.1rem;width:26px;text-align:center}
+.cat-stat-row .label{flex:1;font-size:.8rem;font-weight:700}
+.cat-stat-row .bar-bg{flex:1.2;height:8px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.cat-stat-row .bar-fill{height:100%;border-radius:99px;transition:width .3s}
+.cat-stat-row .amount{font-size:.78rem;font-weight:800;min-width:78px;text-align:right}
+
+/* ============ Баланс ============ */
+.balance-card{background:var(--text);color:#fff;border-radius:17px;padding:19px 20px}
+.balance-card .label{font-size:.68rem;color:rgba(255,255,255,.6);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.balance-card .value{font-size:1.65rem;font-weight:850;line-height:1.15;margin-top:4px}
+.balance-card .value.negative{color:#ff9da4}
+.balance-card .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:17px;padding-top:13px;border-top:1px solid rgba(255,255,255,.12)}
+.balance-card .row .col{min-width:0}
+.balance-card .row .value{font-size:.9rem;margin-top:2px}
+.balance-card .value.income{color:#8fe0b9}
+.balance-card .value.expense{color:#ff9da4}
+
+/* ============ Календарь ============ */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cal-nav{display:flex;gap:5px}
+.cal-nav button{width:34px;height:34px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);color:var(--text)}
+.cal-title{font-size:1rem;font-weight:850}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0 5px}
+.cal-weekdays>div{text-align:center;color:var(--muted);font-size:.6rem;font-weight:800;padding:3px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal-day{position:relative;min-height:66px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);padding:6px 6px 8px;cursor:pointer;transition:.15s;overflow:hidden}
+.cal-day:hover{border-color:color-mix(in srgb,var(--primary) 35%,var(--border));transform:translateY(-1px)}
+.cal-day.empty{background:transparent;border:0;cursor:default;min-height:66px}
+.cal-day.empty:hover{transform:none}
+.cal-day.today{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.cal-day.has-income{background:var(--success-soft);border-color:color-mix(in srgb,var(--success) 25%,var(--border))}
+.cal-day.has-expense{background:var(--danger-soft);border-color:color-mix(in srgb,var(--danger) 25%,var(--border))}
+.cal-day.has-both{background:linear-gradient(135deg,var(--danger-soft) 0%,var(--danger-soft) 50%,var(--success-soft) 50%,var(--success-soft) 100%)}
+.cal-day.has-savings{border-color:#c4a356}
+.cal-day .num{font-size:.7rem;font-weight:850;color:var(--text)}
+.cal-day .sums{display:flex;flex-direction:column;gap:1px;margin-top:4px;font-size:.58rem;font-weight:800;line-height:1.15}
+.cal-day .sums .inc{color:var(--success)}
+.cal-day .sums .exp{color:var(--danger)}
+.cal-day .savings-dot{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#c4a356}
+.cal-day .sums-savings{margin-top:2px;font-size:.55rem;font-weight:800;color:#a6833a}
+
+/* ============ Тема ============ */
 .theme-panel{position:fixed;top:22px;right:max(22px,calc((100vw - 1220px)/2 + 22px));width:245px;background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:13px;box-shadow:var(--shadow-lg);display:none;z-index:100}.theme-panel.show{display:block;animation:pop .16s ease}@keyframes pop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:none}}.theme-panel-title{font-size:.72rem;font-weight:850;color:var(--muted);margin-bottom:9px}.theme-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.theme-option{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:9px;text-align:left;font-size:.72rem;font-weight:800;display:flex;align-items:center;gap:7px}.theme-option.active{border-color:var(--primary);background:var(--primary-soft)}.theme-dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}.theme-dot.light{background:#5b73f2}.theme-dot.dark{background:#202738}.theme-dot.pink{background:#e65a91}.theme-dot.green{background:#2b9a76}
-.modal-bg{position:fixed;inset:0;background:rgba(10,18,25,.48);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:200}.modal-bg.show{display:flex}.modal{width:min(100%,500px);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow-lg)}.modal h2{font-size:1.05rem;margin-bottom:18px}.form-row{margin-bottom:15px}.form-row label{display:block;font-size:.72rem;font-weight:800;color:var(--muted);margin-bottom:6px}.form-row input{width:100%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:11px 12px;font-size:.82rem}.form-row input:focus{border-color:var(--primary);background:var(--surface)}.bill-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.bill-input{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:8px;text-align:center}.bill-input .lbl{display:block;font-size:.65rem;font-weight:800;color:var(--muted);margin-bottom:5px}.bill-input input{text-align:center;padding:8px}.modal-total{text-align:center;font-size:1.65rem;font-weight:900;padding:13px;border-radius:12px;background:var(--primary-soft);color:var(--primary);margin:8px 0 16px}.modal-total small{font-size:.75rem}.modal-actions{display:flex;gap:8px}.btn-cancel,.btn-save{flex:1;border:0;border-radius:10px;padding:11px;font-size:.8rem;font-weight:850}.btn-cancel{background:var(--surface-3);color:var(--text)}.btn-save{background:var(--primary);color:#fff}.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--surface-3);padding:4px;border-radius:11px;margin-bottom:15px}.type-toggle button{border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;font-size:.76rem;font-weight:800}.type-toggle button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(20,30,40,.08)}.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cat-grid button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:9px 5px;font-size:.72rem;font-weight:750}.cat-grid button.active{border-color:var(--primary);background:var(--primary-soft)}.emoji-grid,.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}.emoji-grid button,.color-grid button{border:1px solid var(--border);background:var(--surface-2);border-radius:8px;min-height:34px}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:10px;padding:9px 13px;font-size:.75rem;font-weight:750;z-index:300;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.syncing{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-10px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:99px;padding:7px 11px;font-size:.68rem;z-index:300;transition:.2s}.syncing.show{opacity:1;transform:translateX(-50%) translateY(0)}.spinner{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px}@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ Модалки ============ */
+.modal-bg{position:fixed;inset:0;background:rgba(10,18,25,.48);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:200}.modal-bg.show{display:flex}.modal{width:min(100%,500px);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow-lg)}.modal h2{font-size:1.05rem;margin-bottom:18px}.form-row{margin-bottom:15px}.form-row label{display:block;font-size:.72rem;font-weight:800;color:var(--muted);margin-bottom:6px}.form-row input{width:100%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:11px 12px;font-size:.82rem}.form-row input:focus{border-color:var(--primary);background:var(--surface)}.bill-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.bill-input{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:8px;text-align:center}.bill-input .lbl{display:block;font-size:.65rem;font-weight:800;color:var(--muted);margin-bottom:5px}.bill-input input{text-align:center;padding:8px}.modal-total{text-align:center;font-size:1.65rem;font-weight:900;padding:13px;border-radius:12px;background:var(--primary-soft);color:var(--primary);margin:8px 0 16px}.modal-total small{font-size:.75rem}.modal-actions{display:flex;gap:8px}.btn-cancel,.btn-save{flex:1;border:0;border-radius:10px;padding:11px;font-size:.8rem;font-weight:850}.btn-cancel{background:var(--surface-3);color:var(--text)}.btn-save{background:var(--primary);color:#fff}.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--surface-3);padding:4px;border-radius:11px;margin-bottom:15px}.type-toggle button{border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;font-size:.76rem;font-weight:800}.type-toggle button.active{background:var(--surface);color:var(--text);box-shadow:0 2px 7px rgba(20,30,40,.08)}
+.emoji-grid,.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}.emoji-grid button,.color-grid button{border:1px solid var(--border);background:var(--surface-2);border-radius:8px;min-height:34px}.emoji-grid button.active{border-color:var(--primary);background:var(--primary-soft)}.color-grid button.active{outline:3px solid var(--text);outline-offset:2px}
+
+/* ============ Тост / синхронизация ============ */
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(15px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:10px;padding:9px 13px;font-size:.75rem;font-weight:750;z-index:300;transition:.2s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.error{background:var(--danger)}
+.syncing{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-10px);opacity:0;pointer-events:none;background:var(--text);color:#fff;border-radius:99px;padding:7px 11px;font-size:.68rem;z-index:300;transition:.2s}.syncing.show{opacity:1;transform:translateX(-50%) translateY(0)}.spinner{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px}@keyframes spin{to{transform:rotate(360deg)}}
+
 body[data-theme="dark"]{--bg:#0d1117;--surface:#151b23;--surface-2:#10161e;--surface-3:#1c2530;--text:#edf2f7;--muted:#8e9aa7;--border:#27313d;--primary:#6f8cff;--primary-2:#5d7cff;--primary-soft:#1c2948;--success:#5bd09a;--success-soft:#153427;--danger:#ff7882;--danger-soft:#3b1d23;--shadow:0 8px 30px rgba(0,0,0,.18);--shadow-lg:0 18px 50px rgba(0,0,0,.4)}
 body[data-theme="pink"]{--primary:#d84f88;--primary-2:#c83f77;--primary-soft:#fdeaf2;--success:#16845a;--success-soft:#e7f6ef}
 body[data-theme="green"]{--primary:#198765;--primary-2:#117052;--primary-soft:#e7f6ef;--success:#16845a;--success-soft:#e7f6ef}
 body[data-theme="dark"] .balance-card{background:#0b1016}
+
 @media(max-width:760px){
  .app{display:block;padding:12px 12px 86px}.header{margin-bottom:12px;padding:16px}.header-top{align-items:center}.title h1{font-size:1.05rem}.header-actions .add-btn{padding:9px 11px;font-size:.72rem}.stats-grid{gap:6px}.stat-box{padding:9px 8px}.stat-box .value{font-size:.88rem}
  #tabs .nav-brand{display:none} #tabs{position:fixed;left:10px;right:10px;bottom:10px;top:auto;z-index:150;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.15)}.tabs button{justify-content:center;text-align:center;padding:9px 4px;font-size:.68rem;gap:4px}.tabs button.active{box-shadow:none}
- .section{padding:14px;margin-bottom:10px}.bills-row{gap:6px}.bill-chip{padding:9px 4px}.bill-chip .num{font-size:.9rem}.chart-wrap{min-height:205px}.bar-chart,.line-chart{height:195px}.balance-card .value{font-size:1.4rem}.tx-item .note{max-width:170px}.cal-weekdays{gap:3px}.cal-grid{gap:3px}.cal-day{min-height:46px;padding:5px}.cal-day .sums{display:none}.theme-panel{top:auto;bottom:72px;right:12px;width:220px}.modal{padding:17px;border-radius:17px}.bill-inputs{gap:5px}.emoji-grid,.color-grid{grid-template-columns:repeat(6,1fr)}
+ .section{padding:14px;margin-bottom:10px}.bills-row{gap:6px}.bill-chip{padding:9px 4px}.bill-chip .num{font-size:.9rem}.chart-wrap{min-height:205px}.bar-chart,.line-chart{height:195px}.balance-card .value{font-size:1.4rem}.tx-info .meta{max-width:170px}.cal-weekdays{gap:3px}.cal-grid{gap:3px}.cal-day{min-height:52px;padding:5px}.cal-day .sums{font-size:.5rem}.cal-day .num{font-size:.65rem}.theme-panel{top:auto;bottom:72px;right:12px;width:220px}.modal{padding:17px;border-radius:17px}.bill-inputs{gap:5px}.emoji-grid,.color-grid{grid-template-columns:repeat(6,1fr)}
 }
-@media(max-width:420px){.header-actions .add-btn{font-size:0;width:38px;height:38px;padding:0}.header-actions .add-btn:first-letter{font-size:1.1rem}.stats-grid .label{font-size:.54rem}.stats-grid .value{font-size:.78rem}.bills-row{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(2,1fr)}.balance-card .row{gap:10px}}
+@media(max-width:420px){.header-actions .add-btn{font-size:0;width:38px;height:38px;padding:0}.header-actions .add-btn:first-letter{font-size:1.1rem}.stats-grid .label{font-size:.54rem}.stats-grid .value{font-size:.78rem}.bills-row{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(2,1fr)}.balance-card .row{gap:10px}.cal-day{min-height:46px}.cal-day .sums{font-size:.46rem}}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ============ Шапка (динамическая, зависит от вкладки) ============ -->
   <div class="header" id="header"></div>
+
   <div class="theme-panel" id="themePanel">
     <div class="theme-panel-title">Тема оформления</div>
     <div class="theme-options">
@@ -65,7 +142,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     </div>
   </div>
 
-  <!-- ============ Вкладки ============ -->
   <div class="tabs" id="tabs">
     <div class="nav-brand"><strong>Копилка</strong><span>Финансы</span></div>
     <button data-tab="savings" class="active">🏦 Копилка</button>
@@ -73,12 +149,11 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     <button data-tab="calendar">📅 Календарь</button>
   </div>
 
-  <!-- ============ Содержимое вкладки ============ -->
   <div id="tabContent"></div>
 
 </div>
 
-<!-- ============ Модалка: копилка ============ -->
+<!-- Модалка: копилка -->
 <div class="modal-bg" id="modalSavings">
   <div class="modal">
     <h2>💰 Отложить в копилку</h2>
@@ -117,7 +192,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   </div>
 </div>
 
-<!-- ============ Модалка: транзакция ============ -->
+<!-- Модалка: транзакция -->
 <div class="modal-bg" id="modalTx">
   <div class="modal">
     <h2>💰 Новая операция</h2>
@@ -136,8 +211,8 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
         <label style="margin:0;">Категория</label>
         <button type="button" id="txAddCatBtn"
-          style="background:transparent;border:none;color:#1d5b7a;
-                 font-size:0.78rem;font-weight:700;cursor:pointer;">
+          style="background:transparent;border:none;color:var(--primary);
+                 font-size:.78rem;font-weight:700;cursor:pointer;">
           + Новая
         </button>
       </div>
@@ -146,11 +221,8 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
 
     <div class="form-row">
       <label>Сумма</label>
-      <div class="amount-input-wrap">
-        <input type="number" min="0" inputmode="numeric"
-               placeholder="0" id="txAmount">
-        <span class="currency">₽</span>
-      </div>
+      <input type="number" min="0" inputmode="numeric"
+             placeholder="0" id="txAmount">
     </div>
 
     <div class="form-row">
@@ -166,7 +238,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   </div>
 </div>
 
-<!-- ============ Модалка: категория ============ -->
+<!-- Модалка: категория -->
 <div class="modal-bg" id="modalCat">
   <div class="modal">
     <h2>🏷️ Новая категория</h2>
@@ -199,28 +271,24 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   </div>
 </div>
 
-<!-- ============ Модалка: выбор действия для дня ============ -->
+<!-- Модалка: выбор действия для дня -->
 <div class="modal-bg" id="modalDayAction">
-  <div class="modal" style="max-width: 380px;">
+  <div class="modal" style="max-width:380px;">
     <h2 style="text-align:center;">📅 <span id="dayActionDate"></span></h2>
-    <p style="text-align:center; color:#7a99ac; font-size:0.85rem;
-              margin-bottom:1.25rem;">
+    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:1.25rem;">
       Что добавить в этот день?
     </p>
-    <div style="display:flex; flex-direction:column; gap:10px;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
       <button class="add-btn" id="dayAddIncome"
-        style="justify-content:center; background: linear-gradient(135deg,#2ec27e,#1b7a4b);
-               box-shadow: 0 6px 15px rgba(46,194,126,0.3);">
+        style="justify-content:center;background:var(--success);">
         💰 Добавить доход
       </button>
       <button class="add-btn" id="dayAddExpense"
-        style="justify-content:center; background: linear-gradient(135deg,#e5484d,#b03030);
-               box-shadow: 0 6px 15px rgba(229,72,77,0.3);">
+        style="justify-content:center;background:var(--danger);">
         💸 Добавить расход
       </button>
       <button class="add-btn" id="dayAddSavings"
-        style="justify-content:center; background: linear-gradient(135deg,#c4a356,#9a7e3a);
-               box-shadow: 0 6px 15px rgba(196,163,86,0.3);">
+        style="justify-content:center;background:#a6833a;">
         🏦 Отложить в копилку
       </button>
     </div>
@@ -232,7 +300,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   </div>
 </div>
 
-<!-- ============ Модалка: список операций за день ============ -->
+<!-- Модалка: список операций за день -->
 <div class="modal-bg" id="modalDayList">
   <div class="modal">
     <h2 id="dayListTitle">📅 Операции</h2>
@@ -262,18 +330,19 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); }
 
+  // ============ DOM ============
+  const $ = id => document.getElementById(id);
 
-  // ============ Темы оформления ============
+  // ============ Тема ============
   function applyTheme(theme) {
     const allowed = ['light','dark','pink','green'];
     if (!allowed.includes(theme)) theme = 'light';
-    document.body.dataset.theme = theme === 'light' ? 'light' : theme;
+    document.body.dataset.theme = theme;
     localStorage.setItem('kopilka_theme', theme);
     document.querySelectorAll('.theme-option').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.themeChoice === theme);
     });
   }
-
   function openThemePanel() {
     const panel = $('themePanel');
     panel.classList.toggle('show');
@@ -282,7 +351,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       btn.classList.toggle('active', btn.dataset.themeChoice === current);
     });
   }
-
   function initTheme() {
     applyTheme(localStorage.getItem('kopilka_theme') || 'light');
     document.querySelectorAll('.theme-option').forEach(btn => {
@@ -302,19 +370,15 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   // ============ Состояние ============
   const STATE = {
     tab: 'savings',
-    // Копилка
     entries: [],
     summary: null,
     stats: null,
-    // Бюджет
     transactions: [],
     budget: null,
     budgetStats: null,
     categories: { income: [], expense: [] },
-    // UI
     currentUser: localStorage.getItem('kopilka_user') || 'Я',
     calView: new Date(),
-    // Модалки
     txType: 'expense',
     txCatId: null,
     catType: 'expense',
@@ -322,9 +386,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     pickedColor: '#7a99ac',
     selectedDateForAction: null,
   };
-
-  // ============ DOM ============
-  const $ = id => document.getElementById(id);
 
   // ============ Утилиты ============
   function showToast(msg, isError) {
@@ -356,9 +417,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     const d = new Date();
     const p = x => String(x).padStart(2, '0');
     return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
-  }
-  function escapeAttr(s) {
-    return String(s).replace(/"/g, '&quot;');
   }
   function vibrate(type) {
     if (!tg?.HapticFeedback) return;
@@ -393,8 +451,12 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   }
 
   // ============ Загрузка данных ============
-  async function reload() {
-    showSyncing(true);
+  // opts.silent = true — не показывать спиннер и не перерисовывать UI, если открыта модалка
+  // opts.forceRender = true — перерисовать даже если открыта модалка (для сохранений)
+  async function reload(opts = {}) {
+    const silent = opts.silent === true;
+    const forceRender = opts.forceRender === true;
+    if (!silent) showSyncing(true);
     try {
       const [e, s, st, tx, b, bs, cats] = await Promise.all([
         apiGet('/api/entries'),
@@ -412,14 +474,19 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       STATE.budget = b;
       STATE.budgetStats = bs;
       STATE.categories = cats.categories || { income: [], expense: [] };
-      renderCurrentTab();
       setOnline(true);
+
+      // Не перерисовываем страницу, если открыта модалка, — иначе сбрасывается ввод
+      const anyModalOpen = !!document.querySelector('.modal-bg.show');
+      if (forceRender || !anyModalOpen) {
+        renderCurrentTab();
+      }
     } catch (err) {
       console.error(err);
       setOnline(false);
-      showToast('Не удалось загрузить данные', true);
+      if (!silent) showToast('Не удалось загрузить данные', true);
     } finally {
-      showSyncing(false);
+      if (!silent) showSyncing(false);
     }
   }
 
@@ -433,10 +500,9 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   }
 
   function renderCurrentTab() {
-    if (STATE.tab === 'savings')    renderSavingsTab();
-    if (STATE.tab === 'budget')     renderBudgetTab();
-    if (STATE.tab === 'calendar')   renderCalendarTab();
-    if (STATE.tab === 'categories') renderBudgetTab();
+    if (STATE.tab === 'savings')  renderSavingsTab();
+    if (STATE.tab === 'budget')   renderBudgetTab();
+    if (STATE.tab === 'calendar') renderCalendarTab();
 
     const themeBtn = $('themeBtn');
     if (themeBtn) themeBtn.onclick = openThemePanel;
@@ -568,7 +634,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
           </div>
           <div class="right">
             <span class="amount">+${fmtMoney(e.amount)} ₽</span>
-            <button class="del" data-type="entry" data-id="${e.id}">✕</button>
+            <button class="del" data-id="${e.id}">✕</button>
           </div>
         </div>`;
     }).join('');
@@ -582,13 +648,12 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     try {
       await apiDelete('/api/entries', { id, author: STATE.currentUser });
       showToast('Запись удалена');
-      await reload();
+      await reload({ forceRender: true });
     } catch (e) {
       showToast('Ошибка удаления', true);
     }
   }
 
-  // ---- Графики копилки ----
   function renderSavingsChart(tab) {
     const st = STATE.stats;
     const wrap = $('savingsChart');
@@ -676,8 +741,8 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       <svg class="line-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         <defs>
           <linearGradient id="gradientArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2b7a9c" stop-opacity="0.6"/>
-            <stop offset="100%" stop-color="#2b7a9c" stop-opacity="0"/>
+            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
           </linearGradient>
         </defs>
         ${gridHtml}
@@ -689,7 +754,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     `;
   }
 
-  // ---- Модалка копилки ----
   function openSavingsModal(dateStr) {
     $('svDate').value = dateStr || todayStr();
     $('sv100').value = 0;
@@ -739,7 +803,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     `;
     $('openTxBtn').onclick = () => openTxModal();
 
-    // Транзакции за текущий месяц
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const monthTxs = STATE.transactions
@@ -766,7 +829,10 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       </div>
 
       <div class="section">
-        <h2>🏷️ Категории <button class="icon-btn" id="budgetAddCat" style="width:34px;height:34px;font-size:1rem;">＋</button></h2>
+        <h2>🏷️ Категории
+          <button class="icon-btn" id="budgetAddCat"
+                  style="width:34px;height:34px;font-size:1rem;">＋</button>
+        </h2>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
           <div>
             <div style="font-size:.72rem;font-weight:800;color:var(--success);margin-bottom:7px;">Доходы</div>
@@ -791,7 +857,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
 
     renderTxList(monthTxs);
 
-    // Управление категориями перенесено сюда, чтобы не держать отдельную вкладку.
     renderCatManageList('income', 'budgetCatIncome');
     renderCatManageList('expense', 'budgetCatExpense');
     $('budgetAddCat').onclick = () => openCatModal();
@@ -836,7 +901,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     try {
       await apiDelete('/api/transactions', { id });
       showToast('Операция удалена');
-      await reload();
+      await reload({ forceRender: true });
     } catch (e) {
       showToast('Ошибка удаления', true);
     }
@@ -884,12 +949,9 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
             </div>`;
         }).join('')}
       </div>
-      <div style="display:flex;gap:16px;justify-content:center;
-                  margin-top:12px;font-size:0.72rem;font-weight:600;">
-        <span><span style="display:inline-block;width:10px;height:10px;
-          background:#2ec27e;border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Доход</span>
-        <span><span style="display:inline-block;width:10px;height:10px;
-          background:#e5484d;border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Расход</span>
+      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:.72rem;font-weight:600;">
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--success);border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Доход</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:var(--danger);border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Расход</span>
       </div>
     `;
   }
@@ -908,8 +970,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
             <div class="label">${escapeHtml(t.label)}</div>
             <div class="bar-bg">
               <div class="bar-fill"
-                   style="width:${(t.amount / maxAmount) * 100}%;
-                          background:${t.color};"></div>
+                   style="width:${(t.amount / maxAmount) * 100}%;background:${t.color};"></div>
             </div>
             <div class="amount">${fmtMoney(t.amount)} ₽</div>
           </div>
@@ -918,7 +979,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     `;
   }
 
-  // ---- Модалка транзакции ----
   function openTxModal(dateStr, forceType) {
     $('txDate').value = dateStr || todayStr();
     $('txAmount').value = '';
@@ -935,8 +995,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   function updateTxTypeButtons() {
     document.querySelectorAll('#txTypeToggle button').forEach(b => {
       b.classList.toggle('active', b.dataset.type === STATE.txType);
-      b.classList.remove('income', 'expense');
-      if (b.classList.contains('active')) b.classList.add(STATE.txType);
     });
   }
 
@@ -944,8 +1002,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     const grid = $('txCatGrid');
     const list = STATE.categories[STATE.txType] || [];
     if (list.length === 0) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;
-        color:#7a99ac;font-size:0.85rem;padding:16px;">
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:.85rem;padding:16px;">
         Нет категорий — создайте первую</div>`;
       return;
     }
@@ -953,9 +1010,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       const active = STATE.txCatId === c.id;
       return `
         <div class="cat-pick ${active ? 'active' : ''}" data-id="${c.id}"
-             style="${active ? `border-color:${c.color};
-                     background:${c.color}15;
-                     box-shadow: 0 0 0 2px ${c.color}30;` : ''}">
+             style="${active ? `border-color:${c.color};background:${c.color}15;` : ''}">
           <div class="emoji">${c.emoji}</div>
           <div class="lbl">${escapeHtml(c.label)}</div>
         </div>`;
@@ -985,7 +1040,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       });
       showToast(STATE.txType === 'income' ? 'Доход добавлен' : 'Расход добавлен');
       vibrate('success');
-      await reload();
+      await reload({ forceRender: true });
     } catch (e) {
       showToast('Ошибка сохранения', true);
       vibrate('error');
@@ -1032,18 +1087,10 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
           <div>Сб</div><div>Вс</div>
         </div>
         <div class="cal-grid" id="calGrid"></div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;
-                    margin-top:14px;font-size:0.72rem;
-                    font-weight:600;color:#4a6b7c;">
-          <span><span style="display:inline-block;width:10px;height:10px;
-            background:#e6f8ee;border:1.5px solid #b8e6cc;border-radius:3px;
-            margin-right:4px;vertical-align:middle;"></span>Доход</span>
-          <span><span style="display:inline-block;width:10px;height:10px;
-            background:#fdeaea;border:1.5px solid #f5c8c8;border-radius:3px;
-            margin-right:4px;vertical-align:middle;"></span>Расход</span>
-          <span><span style="display:inline-block;width:8px;height:8px;
-            background:#c4a356;border-radius:50%;
-            margin-right:4px;vertical-align:middle;"></span>Копилка</span>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:.72rem;font-weight:600;color:var(--muted);">
+          <span><span style="display:inline-block;width:10px;height:10px;background:var(--success-soft);border:1.5px solid color-mix(in srgb,var(--success) 25%,var(--border));border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Доход</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:var(--danger-soft);border:1.5px solid color-mix(in srgb,var(--danger) 25%,var(--border));border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Расход</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#c4a356;border-radius:50%;margin-right:4px;vertical-align:middle;"></span>Копилка</span>
         </div>
       </div>
 
@@ -1053,18 +1100,9 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       </div>
     `;
 
-    $('calPrev').onclick = () => {
-      STATE.calView = new Date(year, month - 1, 1);
-      renderCalendarTab();
-    };
-    $('calNext').onclick = () => {
-      STATE.calView = new Date(year, month + 1, 1);
-      renderCalendarTab();
-    };
-    $('calToday').onclick = () => {
-      STATE.calView = new Date();
-      renderCalendarTab();
-    };
+    $('calPrev').onclick = () => { STATE.calView = new Date(year, month - 1, 1); renderCalendarTab(); };
+    $('calNext').onclick = () => { STATE.calView = new Date(year, month + 1, 1); renderCalendarTab(); };
+    $('calToday').onclick = () => { STATE.calView = new Date(); renderCalendarTab(); };
 
     renderCalendarGrid();
     renderMonthSummary();
@@ -1074,10 +1112,10 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     const year = STATE.calView.getFullYear();
     const month = STATE.calView.getMonth();
 
-    // Группируем данные по датам
     const incomeByDate = {};
     const expenseByDate = {};
     const savingsByDate = {};
+    const savingsCountByDate = {};
 
     for (const t of STATE.transactions) {
       const d = t.date;
@@ -1086,6 +1124,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     }
     for (const e of STATE.entries) {
       savingsByDate[e.date] = (savingsByDate[e.date] || 0) + e.amount;
+      savingsCountByDate[e.date] = (savingsCountByDate[e.date] || 0) + 1;
     }
 
     const firstDay = new Date(year, month, 1);
@@ -1114,21 +1153,22 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       else if (hasExp) classes.push('has-expense');
       if (hasSav) classes.push('has-savings');
 
-      let sumsHtml = '';
+      // Внутри ячейки: номер дня, суммы дохода/расхода, сумма копилки, точка копилки
+      let inner = `<div class="num">${d}</div>`;
+
       if (hasInc || hasExp) {
-        sumsHtml = '<div class="sums">';
-        if (hasInc) sumsHtml += `<span class="inc">+${fmtShort(inc)}</span>`;
-        if (hasInc && hasExp) sumsHtml += ' ';
-        if (hasExp) sumsHtml += `<span class="exp">−${fmtShort(exp)}</span>`;
-        sumsHtml += '</div>';
+        inner += '<div class="sums">';
+        if (hasInc) inner += `<span class="inc">+${fmtShort(inc)}</span>`;
+        if (hasExp) inner += `<span class="exp">−${fmtShort(exp)}</span>`;
+        inner += '</div>';
       }
 
-      html += `
-        <div class="${classes.join(' ')}" data-date="${dateStr}">
-          <div class="num">${d}</div>
-          ${sumsHtml}
-          ${hasSav ? '<div class="savings-dot"></div>' : ''}
-        </div>`;
+      if (hasSav) {
+        inner += `<div class="sums-savings">🏦 ${fmtShort(sav)}</div>`;
+        inner += '<div class="savings-dot"></div>';
+      }
+
+      html += `<div class="${classes.join(' ')}" data-date="${dateStr}">${inner}</div>`;
     }
     $('calGrid').innerHTML = html;
 
@@ -1156,67 +1196,59 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
 
     $('monthSummary').innerHTML = `
       <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr;">
-        <div class="stat-box" style="background:#e6f8ee;border-color:#b8e6cc;">
-          <div class="label" style="color:#1b7a4b;">Доходы</div>
-          <div class="value" style="color:#1b7a4b;">+${fmtMoney(inc)} <small>₽</small></div>
+        <div class="stat-box" style="background:var(--success-soft);border-color:color-mix(in srgb,var(--success) 25%,var(--border));">
+          <div class="label" style="color:var(--success);">Доходы</div>
+          <div class="value" style="color:var(--success);">+${fmtMoney(inc)} <small>₽</small></div>
         </div>
-        <div class="stat-box" style="background:#fdeaea;border-color:#f5c8c8;">
-          <div class="label" style="color:#b03030;">Расходы</div>
-          <div class="value" style="color:#b03030;">−${fmtMoney(exp)} <small>₽</small></div>
+        <div class="stat-box" style="background:var(--danger-soft);border-color:color-mix(in srgb,var(--danger) 25%,var(--border));">
+          <div class="label" style="color:var(--danger);">Расходы</div>
+          <div class="value" style="color:var(--danger);">−${fmtMoney(exp)} <small>₽</small></div>
         </div>
         <div class="stat-box" style="background:#f0e6d2;border-color:#d4b980;">
           <div class="label" style="color:#8a6d2a;">Копилка</div>
           <div class="value" style="color:#8a6d2a;">+${fmtMoney(sav)} <small>₽</small></div>
         </div>
       </div>
-      <div class="stat-box" style="margin-top:8px;background:${balance >= 0 ? '#e6f8ee' : '#fdeaea'};border-color:${balance >= 0 ? '#b8e6cc' : '#f5c8c8'};">
+      <div class="stat-box" style="margin-top:8px;background:${balance >= 0 ? 'var(--success-soft)' : 'var(--danger-soft)'};border-color:${balance >= 0 ? 'color-mix(in srgb,var(--success) 25%,var(--border))' : 'color-mix(in srgb,var(--danger) 25%,var(--border))'};">
         <div class="label">Баланс месяца</div>
-        <div class="value" style="color:${balance >= 0 ? '#1b7a4b' : '#b03030'};">
+        <div class="value" style="color:${balance >= 0 ? 'var(--success)' : 'var(--danger)'};">
           ${balance >= 0 ? '+' : '−'}${fmtMoney(Math.abs(balance))} <small>₽</small>
         </div>
       </div>
     `;
   }
 
-  // ---- Клик по дню: открываем список операций + кнопку «добавить» ----
   function onDayClick(dateStr) {
     STATE.selectedDateForAction = dateStr;
 
-    // Собираем всё за этот день
     const dayTxs = STATE.transactions.filter(t => t.date === dateStr);
     const dayEntries = STATE.entries.filter(e => e.date === dateStr);
 
-    // Формат даты
     const d = new Date(dateStr + 'T00:00:00');
     const dateStrHuman = d.toLocaleDateString('ru-RU', {
       day: '2-digit', month: 'long', year: 'numeric'
     });
 
-    // Если в этот день ничего нет — сразу открываем выбор действия
     if (dayTxs.length === 0 && dayEntries.length === 0) {
       openDayAction(dateStr, dateStrHuman);
       return;
     }
 
-    // Иначе открываем список
     $('dayListTitle').innerHTML = `📅 ${dateStrHuman}`;
 
     let html = '';
-
     if (dayTxs.length > 0) {
-      html += '<div style="margin-bottom:12px;"><div style="font-weight:700;font-size:0.8rem;color:#4a6b7c;margin-bottom:6px;">💰 Операции бюджета</div>';
+      html += '<div style="margin-bottom:12px;"><div style="font-weight:800;font-size:.78rem;color:var(--muted);margin-bottom:6px;">💰 Операции бюджета</div>';
       html += dayTxs.map(t => {
         const sign = t.type === 'income' ? '+' : '−';
         return `
-          <div class="tx-item ${t.type}" style="margin-bottom:6px;">
+          <div class="tx-item ${t.type}" style="margin-bottom:6px;border-bottom:1px solid var(--border);">
             <div class="tx-icon" style="background:${t.categoryColor}20;color:${t.categoryColor}">
               ${t.categoryEmoji}
             </div>
             <div class="tx-info">
               <div class="cat">${escapeHtml(t.categoryLabel)}</div>
-              <div class="meta">
-                ${escapeHtml(t.author)}${t.note ? ' · ' + escapeHtml(t.note) : ''}
-              </div>
+              <div class="meta">${escapeHtml(t.author)}${t.note ? ' · ' + escapeHtml(t.note) : ''}</div>
             </div>
             <div class="tx-amount">${sign}${fmtMoney(t.amount)} ₽</div>
           </div>`;
@@ -1225,7 +1257,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     }
 
     if (dayEntries.length > 0) {
-      html += '<div style="margin-bottom:12px;"><div style="font-weight:700;font-size:0.8rem;color:#4a6b7c;margin-bottom:6px;">🏦 Копилка</div>';
+      html += '<div style="margin-bottom:12px;"><div style="font-weight:800;font-size:.78rem;color:var(--muted);margin-bottom:6px;">🏦 Копилка</div>';
       html += dayEntries.map(e => {
         const bills = [];
         if (e.breakdown[1000]) bills.push(`${e.breakdown[1000]}×1000`);
@@ -1248,7 +1280,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
 
     $('dayListContent').innerHTML = html;
 
-    // Кнопка «Добавить в этот день» внизу модалки
     const addBtn = document.createElement('button');
     addBtn.className = 'add-btn';
     addBtn.style.cssText = 'width:100%;justify-content:center;margin-top:8px;';
@@ -1264,7 +1295,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
 
   function closeDayList() { $('modalDayList').classList.remove('show'); }
 
-  // ---- Выбор действия для дня ----
   function openDayAction(dateStr, dateStrHuman) {
     $('dayActionDate').textContent = dateStrHuman;
     $('modalDayAction').classList.add('show');
@@ -1272,63 +1302,27 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   function closeDayAction() { $('modalDayAction').classList.remove('show'); }
 
   // =================================================================
-  // ==================== ВКЛАДКА «КАТЕГОРИИ» ========================
+  // ==================== КАТЕГОРИИ ==================================
   // =================================================================
-  function renderCategoriesTab() {
-    $('header').innerHTML = `
-      <div class="header-top">
-        <div class="title">
-          <h1>🏷️ Категории</h1>
-          <div class="sub">
-            <span>Ваши личные категории</span>
-          </div>
-        </div>
-        <div class="header-actions">
-          <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
-          <button class="add-btn" id="openCatBtn">＋ Категория</button>
-        </div>
-      </div>
-    `;
-    $('openCatBtn').onclick = () => openCatModal();
-
-    $('tabContent').innerHTML = `
-      <div class="section">
-        <h2>💰 Доходы (${STATE.categories.income.length})</h2>
-        <div id="catListIncome"></div>
-      </div>
-      <div class="section">
-        <h2>💸 Расходы (${STATE.categories.expense.length})</h2>
-        <div id="catListExpense"></div>
-      </div>
-    `;
-
-    renderCatManageList('income', 'catListIncome');
-    renderCatManageList('expense', 'catListExpense');
-  }
-
   function renderCatManageList(type, elId) {
     const wrap = $(elId);
     const list = STATE.categories[type] || [];
     if (list.length === 0) {
-      wrap.innerHTML = '<div class="history-empty">Нет категорий</div>';
+      wrap.innerHTML = '<div class="history-empty" style="min-height:auto;padding:14px;font-size:.75rem;">Нет категорий</div>';
       return;
     }
     wrap.innerHTML = list.map(c => `
       <div class="cat-manage-row" data-id="${c.id}">
-        <div style="width:40px;height:40px;border-radius:12px;
+        <div style="width:36px;height:36px;border-radius:10px;
                     background:${c.color}20;color:${c.color};
                     display:flex;align-items:center;justify-content:center;
-                    font-size:1.2rem;flex-shrink:0;">
+                    font-size:1.1rem;flex-shrink:0;">
           ${c.emoji}
         </div>
-        <div style="flex:1;font-weight:700;font-size:0.9rem;">
+        <div style="flex:1;font-weight:750;font-size:.82rem;">
           ${escapeHtml(c.label)}
         </div>
-        <button class="cat-del" data-type="${type}" data-id="${c.id}"
-          style="background:transparent;border:none;color:#e5484d;
-                 font-size:1.1rem;cursor:pointer;padding:4px 8px;">
-          ✕
-        </button>
+        <button class="cat-del" data-type="${type}" data-id="${c.id}" title="Удалить">✕</button>
       </div>
     `).join('');
     wrap.querySelectorAll('.cat-del').forEach(btn => {
@@ -1343,13 +1337,12 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
     try {
       await apiDelete('/api/categories', { type, id });
       showToast('Категория удалена');
-      await reload();
+      await reload({ forceRender: true });
     } catch (e) {
       showToast('Ошибка удаления', true);
     }
   }
 
-  // ---- Модалка категории ----
   function openCatModal(presetType) {
     STATE.catType = presetType || 'expense';
     STATE.pickedEmoji = '📌';
@@ -1366,8 +1359,6 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   function updateCatTypeButtons() {
     document.querySelectorAll('#catTypeToggle button').forEach(b => {
       b.classList.toggle('active', b.dataset.type === STATE.catType);
-      b.classList.remove('income', 'expense');
-      if (b.classList.contains('active')) b.classList.add(STATE.catType);
     });
   }
 
@@ -1416,22 +1407,20 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       STATE.categories = res.categories;
       closeCatModal();
       showToast('Категория создана');
-      // Автовыбор в модалке транзакции, если открыта
+
+      // Если модалка транзакции открыта — обновим сетку категорий
       if ($('modalTx').classList.contains('show') &&
           STATE.catType === STATE.txType) {
         STATE.txCatId = res.category.id;
         renderTxCatGrid();
+      } else {
+        // обновляем данные в фоне без перерисовки
+        await reload({ silent: true });
       }
-      if (STATE.tab === 'categories') renderCurrentTab();
     } catch (e) {
       showToast('Ошибка создания', true);
     }
   }
-
-  // =================================================================
-  // ==================== СБРОС ======================================
-  // ==================== (не реализован в UI, но заглушка) ==========
-  // =================================================================
 
   // =================================================================
   // ==================== ИНИЦИАЛИЗАЦИЯ ==============================
@@ -1439,12 +1428,11 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
   function init() {
     initTheme();
 
-    // Вкладки
     document.querySelectorAll('.tabs button').forEach(btn => {
       btn.onclick = () => switchTab(btn.dataset.tab);
     });
 
-    // ---------- Модалка копилки ----------
+    // Модалка копилки
     ['sv100', 'sv200', 'sv500', 'sv1000'].forEach(id => {
       $(id).oninput = updateSavingsTotal;
     });
@@ -1464,19 +1452,17 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       if (total <= 0) { showToast('Введите хотя бы одну купюру', true); return; }
       closeSavingsModal();
       try {
-        await apiPost('/api/entries', {
-          date, breakdown, author: STATE.currentUser,
-        });
+        await apiPost('/api/entries', { date, breakdown, author: STATE.currentUser });
         showToast(`+${fmtMoney(total)} ₽ отложено`);
         vibrate('success');
-        await reload();
+        await reload({ forceRender: true });
       } catch (e) {
         showToast('Ошибка сохранения', true);
         vibrate('error');
       }
     };
 
-    // ---------- Модалка транзакции ----------
+    // Модалка транзакции
     document.querySelectorAll('#txTypeToggle button').forEach(b => {
       b.onclick = () => {
         STATE.txType = b.dataset.type;
@@ -1492,7 +1478,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       if (e.target === $('modalTx')) closeTxModal();
     };
 
-    // ---------- Модалка категории ----------
+    // Модалка категории
     document.querySelectorAll('#catTypeToggle button').forEach(b => {
       b.onclick = () => {
         STATE.catType = b.dataset.type;
@@ -1505,7 +1491,7 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       if (e.target === $('modalCat')) closeCatModal();
     };
 
-    // ---------- Модалка действий дня ----------
+    // Модалка действий дня
     $('dayCancel').onclick = closeDayAction;
     $('modalDayAction').onclick = e => {
       if (e.target === $('modalDayAction')) closeDayAction();
@@ -1526,23 +1512,27 @@ body[data-theme="dark"] .balance-card{background:#0b1016}
       openSavingsModal(date);
     };
 
-    // ---------- Модалка списка дня ----------
+    // Модалка списка дня
     $('dayListClose').onclick = closeDayList;
     $('modalDayList').onclick = e => {
       if (e.target === $('modalDayList')) closeDayList();
     };
 
-    // ---------- Первая загрузка ----------
+    // Первая загрузка
     reload();
 
-    // Автосинхронизация
+    // Тихая автосинхронизация: если открыта модалка — вообще не дёргаем сервер
     setInterval(() => {
       if (document.hidden) return;
-      reload();
-    }, 7000);
+      if (document.querySelector('.modal-bg.show')) return;
+      reload({ silent: true });
+    }, 8000);
 
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) reload();
+      if (!document.hidden) {
+        if (document.querySelector('.modal-bg.show')) return;
+        reload({ silent: true });
+      }
     });
   }
 
