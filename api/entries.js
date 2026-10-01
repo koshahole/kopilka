@@ -1,5 +1,5 @@
 import { kv } from '@vercel/kv';
-import { broadcast, escapeHtml } from '../lib/telegram.js';
+import { broadcast, escapeHtml, byGender } from '../lib/telegram.js';
 
 const ENTRIES_KEY = 'kopilka-300k:entries:v1';
 const TARGET_SUM = 300000;
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   // ---------- POST ----------
   if (req.method === 'POST') {
     try {
-      const { date, breakdown, author } = req.body || {};
+      const { date, breakdown, author, authorGender } = req.body || {};
       if (!isValidDate(date) || !breakdown) {
         return res.status(400).json({ error: 'Неверный формат' });
       }
@@ -44,6 +44,7 @@ export default async function handler(req, res) {
         amount,
         breakdown: clean,
         author: String(author || 'Кто-то').slice(0, 40),
+        authorGender: (authorGender === 'm' || authorGender === 'f') ? authorGender : '',
         created_at: Date.now(),
       };
       entries.push(entry);
@@ -51,6 +52,7 @@ export default async function handler(req, res) {
 
       sendNotifications({
         author: entry.author,
+        authorGender: entry.authorGender,
         amount,
         breakdown: clean,
         action: 'add',
@@ -67,7 +69,7 @@ export default async function handler(req, res) {
   // ---------- DELETE ----------
   if (req.method === 'DELETE') {
     try {
-      const { id, author } = req.body || {};
+      const { id, author, authorGender } = req.body || {};
       if (!id) return res.status(400).json({ error: 'Нет id' });
 
       let entries = (await kv.get(ENTRIES_KEY)) || [];
@@ -79,6 +81,7 @@ export default async function handler(req, res) {
 
       sendNotifications({
         author: String(author || 'Кто-то').slice(0, 40),
+        authorGender: (authorGender === 'm' || authorGender === 'f') ? authorGender : found.authorGender,
         amount: found.amount,
         breakdown: found.breakdown,
         action: 'remove',
@@ -99,11 +102,13 @@ function isValidDate(s) {
   return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
 }
 
-async function sendNotifications({ author, amount, breakdown, action, totalSaved }) {
+async function sendNotifications({ author, authorGender, amount, breakdown, action, totalSaved }) {
   try {
     const isAdd = action === 'add';
     const emoji = isAdd ? '💰' : '↩️';
-    const verb = isAdd ? 'отложил' : 'удалил запись на';
+    const verb = isAdd
+      ? byGender(authorGender, 'отложил', 'отложила')
+      : byGender(authorGender, 'удалил запись на', 'удалила запись на');
 
     const bills = [];
     if (breakdown[1000]) bills.push(`${breakdown[1000]}×1000₽`);

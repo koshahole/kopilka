@@ -80,6 +80,20 @@ button{cursor:pointer;background:none;border:0}
 .chart-tabs button{border:0;background:transparent;color:var(--muted);padding:8px 13px;border-radius:10px;font-size:.73rem;font-weight:800;white-space:nowrap;transition:.16s}
 .chart-tabs button:hover{color:var(--text)}
 .chart-tabs button.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-xs)}
+
+/* Пончик «Топ расходов» */
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut{position:relative;width:150px;height:150px;flex-shrink:0;border-radius:50%;background:var(--primary-soft)}
+.donut-hole{position:absolute;inset:26px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:inset 0 0 0 1px var(--border)}
+.donut-hole b{font-size:.82rem;font-weight:800;line-height:1.15}
+.donut-hole span{font-size:.62rem;color:var(--muted);margin-top:2px}
+.donut-wrap .top-list{flex:1;min-width:190px}
+.top-list{display:flex;flex-direction:column;gap:2px}
+.top-item{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:.8rem}
+.top-item .emoji{font-size:1.05rem;width:24px;text-align:center;flex-shrink:0}
+.top-item .name{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-item .meta{color:var(--muted);font-size:.72rem;font-weight:700;white-space:nowrap}
+.top-item .sum{font-weight:800;font-size:.78rem;min-width:70px;text-align:right;white-space:nowrap;letter-spacing:-.01em}
 .chart-wrap{min-height:230px}
 .charts-empty,.history-empty{min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.82rem;background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:15px;padding:20px}
 .bar-chart{height:220px;display:flex;align-items:flex-end;gap:7px;padding:18px 3px 0;overflow-x:auto}
@@ -635,6 +649,16 @@ body[data-theme="dark"] .balance-card{background:#060a12}
     </div>
 
     <div class="form-row">
+      <label>Пол</label>
+      <div class="type-toggle" id="setGenderToggle" style="margin-bottom:0;">
+        <button type="button" data-gender="m">Мужской</button>
+        <button type="button" data-gender="f">Женский</button>
+      </div>
+      <div class="field-hint">Нужен, чтобы в уведомлениях было правильно: «добавил» или «добавила».</div>
+    </div>
+
+
+    <div class="form-row">
       <label>Тема оформления</label>
       <div class="theme-options">
         <button class="theme-option" data-theme-choice="light"><span class="theme-dot light"></span>Светлая</button>
@@ -739,6 +763,9 @@ body[data-theme="dark"] .balance-card{background:#060a12}
     })(),
     calView: new Date(),
     budgetMonth: null,   // 'YYYY-MM', выбранный месяц в Бюджете
+    savingsChartTab: 'month',    // активная подвкладка статистики копилки
+    budgetChartTab: 'monthly',   // активная подвкладка бюджета
+    gender: localStorage.getItem('kopilka_gender') || '',
     txType: 'expense',
     txCatId: null,
     catType: 'expense',
@@ -918,10 +945,12 @@ body[data-theme="dark"] .balance-card{background:#060a12}
     // Если пользователь задал своё имя в настройках — используем его
     const custom = localStorage.getItem('kopilka_user');
     const name = custom || u.first_name || u.username || 'Участник';
+    const gender = localStorage.getItem('kopilka_gender') || '';
     try {
       await apiPost('/api/register', {
         id: u.id,
         name,
+        gender,
         username: u.username || null,
       });
     } catch (e) {
@@ -1063,9 +1092,8 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       <div class="section">
         <h2>📊 Статистика копилки</h2>
         <div class="chart-tabs" id="savingsTabs">
-          <button data-tab="month" class="active">Месяцы</button>
+          <button data-tab="month">Месяцы</button>
           <button data-tab="week">Недели</button>
-          <button data-tab="cumulative">Накопление</button>
           <button data-tab="weekday">Дни</button>
         </div>
         <div class="chart-wrap" id="savingsChart"></div>
@@ -1077,14 +1105,16 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       </div>
     `;
 
-    renderSavingsChart('month');
     document.querySelectorAll('#savingsTabs button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === STATE.savingsChartTab);
       btn.onclick = () => {
+        STATE.savingsChartTab = btn.dataset.tab;
         document.querySelectorAll('#savingsTabs button').forEach(b =>
           b.classList.toggle('active', b === btn));
         renderSavingsChart(btn.dataset.tab);
       };
     });
+    renderSavingsChart(STATE.savingsChartTab);
 
     renderSavingsHistory();
   }
@@ -1129,7 +1159,7 @@ body[data-theme="dark"] .balance-card{background:#060a12}
   async function deleteEntry(id) {
     if (!confirm('Удалить эту запись из копилки?')) return;
     try {
-      await apiDelete('/api/entries', { id, author: STATE.currentUser });
+      await apiDelete('/api/entries', { id, author: STATE.currentUser, authorGender: STATE.gender });
       showToast('Запись удалена');
       await reload({ forceRender: true });
     } catch (e) {
@@ -1153,8 +1183,6 @@ body[data-theme="dark"] .balance-card{background:#060a12}
         label: d.label, value: d.sum, current: i === st.byWeek.length - 1,
       }));
       renderHBars(wrap, rows.reverse(), 'Нет данных за 12 недель');
-    } else if (tab === 'cumulative') {
-      renderLineChart(st.cumulative.map(c => ({ label: c.label, value: c.total })), wrap);
     } else if (tab === 'weekday') {
       const todayIdx = (new Date().getDay() + 6) % 7;
       const rows = st.weekdays.map((d, i) => ({
@@ -1187,57 +1215,56 @@ body[data-theme="dark"] .balance-card{background:#060a12}
     `;
   }
 
-  function renderLineChart(data, wrap) {
-    const values = data.map(d => d.value);
-    const maxVal = Math.max(...values, 1);
-    const minVal = Math.min(...values, 0);
-    const allZero = values.every(v => v === 0);
-    if (allZero) {
-      wrap.innerHTML = '<div class="charts-empty">Нет данных</div>';
+  // Круговая (кольцевая) диаграмма для «Топ расходов»
+  function renderDonutChart(items, wrap) {
+    const total = items.reduce((s, i) => s + i.amount, 0);
+    if (!items.length || total <= 0) {
+      wrap.innerHTML = '<div class="charts-empty">Пока нет расходов за этот месяц</div>';
       return;
     }
 
-    const W = wrap.clientWidth || 800;
-    const H = wrap.clientHeight || 220;
-    const padL = 8, padR = 8, padT = 20, padB = 30;
-    const innerW = W - padL - padR;
-    const innerH = H - padT - padB;
-    const n = data.length;
-    const range = maxVal - Math.min(minVal, 0) || 1;
-    const base = Math.min(minVal, 0);
+    const size = 200, stroke = 26;
+    const r = (size - stroke) / 2;
+    const cx = size / 2, cy = size / 2;
+    const circ = 2 * Math.PI * r;
+    let offset = 0;
 
-    const x = i => padL + (n > 1 ? (i / (n - 1)) * innerW : innerW / 2);
-    const y = v => padT + innerH - ((v - base) / range) * innerH;
-
-    const points = data.map((d, i) => ({
-      x: x(i), y: y(d.value), val: d.value, lbl: d.label
-    }));
-    const linePath = points.map((p, i) =>
-      `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`
-    ).join(' ');
-    const areaPath = `${linePath} L${points[points.length-1].x.toFixed(1)},${(padT+innerH).toFixed(1)} L${points[0].x.toFixed(1)},${(padT+innerH).toFixed(1)} Z`;
-
-    let gridHtml = '';
-    for (let i = 0; i <= 4; i++) {
-      const gy = padT + (innerH / 4) * i;
-      gridHtml += `<line class="grid-line" x1="${padL}" y1="${gy}" x2="${padL + innerW}" y2="${gy}" />`;
-    }
-    const pointsHtml = points.map(p =>
-      `<circle class="point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"><title>${fmtMoney(p.val)} ₽</title></circle>`
-    ).join('');
-    const labelsHtml = points.map((p, i) => {
-      if (i % 2 !== 0 && i !== n - 1) return '';
-      return `<text class="lbl" x="${p.x.toFixed(1)}" y="${(H - 8).toFixed(1)}" text-anchor="middle">${p.lbl}</text>`;
+    const segments = items.map(it => {
+      const frac = it.amount / total;
+      const len = frac * circ;
+      const seg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+        stroke="${it.color}" stroke-width="${stroke}"
+        stroke-dasharray="${len.toFixed(2)} ${(circ - len).toFixed(2)}"
+        stroke-dashoffset="${(-offset).toFixed(2)}"
+        transform="rotate(-90 ${cx} ${cy})">
+        <title>${escapeHtml(it.label)}: ${fmtMoney(it.amount)} ₽</title>
+      </circle>`;
+      offset += len;
+      return seg;
     }).join('');
 
     wrap.innerHTML = `
-      <svg class="line-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-        ${gridHtml}
-        <path d="${areaPath}" fill="var(--primary)" opacity="0.08"/>
-        <path class="line" d="${linePath}"/>
-        ${pointsHtml}
-        ${labelsHtml}
-      </svg>
+      <div class="donut-wrap">
+        <div class="donut" style="width:${size}px;height:${size}px;">
+          <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img"
+               aria-label="Круговая диаграмма расходов по категориям">
+            ${segments}
+          </svg>
+          <div class="donut-center">
+            <div class="cap">Всего</div>
+            <div class="total">${fmtMoney(total)} ₽</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          ${items.map(it => `
+            <div class="donut-legend-row">
+              <span class="dot" style="background:${it.color}"></span>
+              <span class="lbl">${it.emoji} ${escapeHtml(it.label)}</span>
+              <span class="pct">${Math.round((it.amount / total) * 100)}%</span>
+              <span class="amt">${fmtMoney(it.amount)} ₽</span>
+            </div>`).join('')}
+        </div>
+      </div>
     `;
   }
 
@@ -1316,8 +1343,7 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       <div class="section">
         <h2>📊 Доходы и расходы</h2>
         <div class="chart-tabs" id="budgetTabs">
-          <button data-tab="monthly" class="active">Месяцы</button>
-          <button data-tab="cumulative">Накопление</button>
+          <button data-tab="monthly">Месяцы</button>
           <button data-tab="topExp">Топ расходов</button>
         </div>
         <div class="chart-wrap" id="budgetChart"></div>
@@ -1426,8 +1452,6 @@ body[data-theme="dark"] .balance-card{background:#060a12}
 
     if (tab === 'monthly') {
       renderHBarsDual(wrap, buildMonthly());
-    } else if (tab === 'cumulative') {
-      renderLineChart(buildCumulative(), wrap);
     } else if (tab === 'topExp') {
       wrap.innerHTML = '';
       renderTopExpenses(topExpensesFor(STATE.budgetMonth), extra);
@@ -1472,22 +1496,36 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       wrap.innerHTML = '<div class="charts-empty">Пока нет расходов в этом месяце</div>';
       return;
     }
+    const total = topExpenses.reduce((s, t) => s + t.amount, 0);
     const maxAmount = Math.max(...topExpenses.map(t => t.amount), 1);
+    const R = 15.9155;
+    let offset = 0;
+    const rings = topExpenses.map(t => {
+      const pct = t.amount / total * 100;
+      const seg = `<circle cx="21" cy="21" r="${R}" fill="none"
+        stroke="${t.color}" stroke-width="7" stroke-linecap="butt"
+        stroke-dasharray="${(pct * 0.985).toFixed(2)} 100"
+        stroke-dashoffset="${(-offset).toFixed(2)}"></circle>`;
+      offset += pct;
+      return seg;
+    }).join('');
+    const rows = topExpenses.map(t => `
+      <div class="top-item">
+        <div class="emoji" style="background:${t.color}22">${t.emoji}</div>
+        <div class="name">${escapeHtml(t.label)}</div>
+        <div class="meta">${Math.round(t.amount / total * 100)}%</div>
+        <div class="sum">${fmtMoney(t.amount)} ₽</div>
+      </div>`).join('');
     wrap.innerHTML = `
-      <div style="margin-top:8px;">
-        ${topExpenses.map(t => `
-          <div class="cat-stat-row">
-            <div class="emoji">${t.emoji}</div>
-            <div class="label">${escapeHtml(t.label)}</div>
-            <div class="bar-bg">
-              <div class="bar-fill"
-                   style="width:${(t.amount / maxAmount) * 100}%;background:${t.color};"></div>
-            </div>
-            <div class="amount">${fmtMoney(t.amount)} ₽</div>
-          </div>
-        `).join('')}
-      </div>
-    `;
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg viewBox="0 0 42 42" width="150" height="150" style="display:block;transform:rotate(-90deg)">
+            ${rings}
+          </svg>
+          <div class="donut-hole"><b>${fmtMoney(total)}</b><span>всего</span></div>
+        </div>
+        <div class="top-list">${rows}</div>
+      </div>`;
   }
 
   function openTxModal(dateStr, forceType) {
@@ -1548,6 +1586,7 @@ body[data-theme="dark"] .balance-card{background:#060a12}
         date, type: STATE.txType, amount,
         categoryId: STATE.txCatId, note,
         author: STATE.currentUser,
+        authorGender: STATE.gender,
       });
       showToast(STATE.txType === 'income' ? 'Доход добавлен' : 'Расход добавлен');
       vibrate('success');
@@ -1916,6 +1955,7 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       await apiPost('/api/reminders', {
         date, time, text, before: STATE.remBefore, at,
         author: STATE.currentUser,
+        authorGender: STATE.gender,
       });
       showToast('Напоминание создано');
       vibrate('success');
@@ -1943,20 +1983,29 @@ body[data-theme="dark"] .balance-card{background:#060a12}
   function openSettings() {
     const name = localStorage.getItem('kopilka_user');
     $('setName').value = (name && name !== 'Я') ? name : '';
+    updateGenderButtons();
     $('modalSettings').classList.add('show');
     vibrate('light');
     renderNotifyStatus();
   }
   function closeSettings() { $('modalSettings').classList.remove('show'); }
 
+  function updateGenderButtons() {
+    document.querySelectorAll('#setGenderToggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.gender === STATE.gender);
+    });
+  }
+
   function saveName() {
     const name = $('setName').value.trim().slice(0, 40);
     if (!name) { showToast('Введите имя', true); return; }
+    if (!STATE.gender) { showToast('Выберите пол', true); return; }
     STATE.currentUser = name;
     localStorage.setItem('kopilka_user', name);
-    registerTelegramUser();   // обновим имя в списке для уведомлений
+    localStorage.setItem('kopilka_gender', STATE.gender);
+    registerTelegramUser();   // обновим имя и пол в списке для уведомлений
     closeSettings();
-    showToast('Имя сохранено');
+    showToast('Настройки сохранены');
     vibrate('success');
   }
 
@@ -2155,7 +2204,11 @@ body[data-theme="dark"] .balance-card{background:#060a12}
       if (total <= 0) { showToast('Введите хотя бы одну купюру', true); return; }
       closeSavingsModal();
       try {
-        await apiPost('/api/entries', { date, breakdown, author: STATE.currentUser });
+        await apiPost('/api/entries', {
+          date, breakdown,
+          author: STATE.currentUser,
+          authorGender: STATE.gender,
+        });
         showToast(`+${fmtMoney(total)} ₽ отложено`);
         vibrate('success');
         await reload({ forceRender: true });
@@ -2243,6 +2296,12 @@ body[data-theme="dark"] .balance-card{background:#060a12}
     $('settingsClose').onclick = closeSettings;
     $('settingsSave').onclick = saveName;
     $('notifyTest').onclick = sendTestNotify;
+    document.querySelectorAll('#setGenderToggle button').forEach(b => {
+      b.onclick = () => {
+        STATE.gender = b.dataset.gender;
+        updateGenderButtons();
+      };
+    });
     $('setName').addEventListener('keydown', e => {
       if (e.key === 'Enter') { e.preventDefault(); saveName(); }
     });

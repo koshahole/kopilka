@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Только POST' });
 
   try {
-    const { id, name, username } = req.body || {};
+    const { id, name, username, gender } = req.body || {};
     const chatId = String(id || '').trim();
     if (!chatId) return res.status(400).json({ error: 'Нет id пользователя' });
 
@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       id: chatId,
       name: String(name || prev.name || 'Участник').slice(0, 40),
       username: username ? String(username).slice(0, 40) : (prev.username || null),
+      gender: (gender === 'm' || gender === 'f') ? gender : (prev.gender || ''),
       joined_at: prev.joined_at || Date.now(),
       notify: prev.notify !== false,
       last_seen: Date.now(),

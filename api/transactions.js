@@ -1,5 +1,5 @@
 import { kv } from '@vercel/kv';
-import { broadcast, escapeHtml } from '../lib/telegram.js';
+import { broadcast, escapeHtml, byGender } from '../lib/telegram.js';
 
 const TX_KEY = 'kopilka-300k:transactions:v1';
 const CAT_KEY = 'kopilka-300k:categories:v1';
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   // ----- POST -----
   if (req.method === 'POST') {
     try {
-      const { date, type, amount, categoryId, note, author } = req.body || {};
+      const { date, type, amount, categoryId, note, author, authorGender } = req.body || {};
       if (!isValidDate(date)) return res.status(400).json({ error: 'Дата' });
       if (type !== 'income' && type !== 'expense') {
         return res.status(400).json({ error: 'Тип' });
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
         categoryColor: cat.color,
         note: String(note || '').slice(0, 120),
         author: String(author || 'Кто-то').slice(0, 40),
+        authorGender: (authorGender === 'm' || authorGender === 'f') ? authorGender : '',
         created_at: Date.now(),
       };
       transactions.push(tx);
@@ -96,10 +97,13 @@ async function sendTxNotifications(tx, action) {
   try {
     const isIncome = tx.type === 'income';
     const isAdd = action === 'add';
+    const g = tx.authorGender;
     const emoji = isIncome ? (isAdd ? '💰' : '↩️') : (isAdd ? '💸' : '↩️');
     const verb = isAdd
-      ? (isIncome ? 'получил доход' : 'потратил')
-      : (isIncome ? 'удалил доход' : 'удалил расход');
+      ? (isIncome ? byGender(g, 'получил доход', 'получила доход')
+                  : byGender(g, 'потратил', 'потратила'))
+      : (isIncome ? byGender(g, 'удалил доход', 'удалила доход')
+                  : byGender(g, 'удалил расход', 'удалила расход'));
 
     const sign = isIncome ? '+' : '−';
     const text =

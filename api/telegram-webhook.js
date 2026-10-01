@@ -17,11 +17,13 @@ export default async function handler(req, res) {
     const users = (await kv.get(USERS_KEY)) || {};
 
     if (text === '/start') {
+      const prev = users[chatId] || {};
       users[chatId] = {
         id: String(chatId),
-        name: firstName,
-        username: msg.from?.username || null,
-        joined_at: Date.now(),
+        name: prev.name || firstName,
+        username: msg.from?.username || prev.username || null,
+        gender: prev.gender || '',
+        joined_at: prev.joined_at || Date.now(),
         notify: true,
         last_seen: Date.now(),
       };
