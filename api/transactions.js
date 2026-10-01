@@ -1,9 +1,8 @@
 import { kv } from '@vercel/kv';
-import { sendMessage, escapeHtml } from '../lib/telegram.js';
+import { broadcast, escapeHtml } from '../lib/telegram.js';
 
 const TX_KEY = 'kopilka-300k:transactions:v1';
 const CAT_KEY = 'kopilka-300k:categories:v1';
-const USERS_KEY = 'kopilka-300k:tg-users:v1';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -95,10 +94,6 @@ function isValidDate(s) {
 
 async function sendTxNotifications(tx, action) {
   try {
-    const users = (await kv.get(USERS_KEY)) || {};
-    const list = Object.values(users).filter(u => u.notify);
-    if (list.length === 0) return;
-
     const isIncome = tx.type === 'income';
     const isAdd = action === 'add';
     const emoji = isIncome ? (isAdd ? '💰' : '↩️') : (isAdd ? '💸' : '↩️');
@@ -112,7 +107,7 @@ async function sendTxNotifications(tx, action) {
       `${tx.categoryEmoji} ${tx.categoryLabel} — <b>${sign}${tx.amount.toLocaleString('ru-RU')} ₽</b>` +
       (tx.note ? `\n📝 ${escapeHtml(tx.note)}` : '');
 
-    await Promise.all(list.map(u => sendMessage(u.id, text)));
+    await broadcast(text);
   } catch (e) {
     console.error('sendTxNotifications error:', e);
   }

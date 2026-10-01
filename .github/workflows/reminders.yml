@@ -1,0 +1,44 @@
+name: Reminders
+
+# Бесплатный планировщик напоминаний — без сторонних сервисов и регистраций.
+# GitHub сам раз в 5 минут вызывает /api/reminders-cron, а тот отправляет
+# наступившие напоминания в Telegram.
+#
+# Настройка (один раз):
+#   GitHub → репозиторий → Settings → Secrets and variables → Actions →
+#   вкладка "Variables" → New repository variable:
+#       Name:  WEBAPP_URL
+#       Value: https://ваш-проект.vercel.app
+#   Либо просто замените адрес ниже в строке с 'your-project'.
+#
+# Запустить проверку вручную: вкладка Actions → Reminders → Run workflow.
+
+on:
+  schedule:
+    # Каждые 5 минут. Время указано в UTC — это не важно: сервер сверяет
+    # точное время напоминания (метку в мс), а не время запуска.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: reminders
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Проверить и отправить напоминания
+        run: |
+          BASE="${{ vars.WEBAPP_URL || 'https://your-project.vercel.app' }}"
+          if [[ "$BASE" == *"your-project"* ]]; then
+            echo "::warning::Укажите адрес приложения: Settings → Secrets and variables → Actions → Variables → WEBAPP_URL"
+            exit 0
+          fi
+          URL="${BASE%/}/api/reminders-cron"
+          echo "Запрос: $URL"
+          curl -fsS --max-time 30 "$URL"
+          echo "Готово"

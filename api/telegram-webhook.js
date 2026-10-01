@@ -1,7 +1,5 @@
 import { kv } from '@vercel/kv';
-import { sendMessage, escapeHtml } from '../lib/telegram.js';
-
-const USERS_KEY = 'kopilka-300k:tg-users:v1';
+import { sendMessage, escapeHtml, USERS_KEY } from '../lib/telegram.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(200).end();
@@ -20,11 +18,12 @@ export default async function handler(req, res) {
 
     if (text === '/start') {
       users[chatId] = {
-        id: chatId,
+        id: String(chatId),
         name: firstName,
         username: msg.from?.username || null,
         joined_at: Date.now(),
         notify: true,
+        last_seen: Date.now(),
       };
       await kv.set(USERS_KEY, users);
 

@@ -170,6 +170,56 @@ button{cursor:pointer;background:none;border:0}
 .cat-stat-row .bar-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.22,1,.36,1)}
 .cat-stat-row .amount{font-size:.8rem;font-weight:800;min-width:82px;text-align:right;letter-spacing:-.01em}
 
+/* ============ Горизонтальные списки-графики ============ */
+.hbar-list{display:flex;flex-direction:column;gap:8px}
+.hbar-row{display:grid;grid-template-columns:66px minmax(0,1fr) 96px;align-items:center;gap:11px;padding:5px 7px;border-radius:11px;transition:background .15s}
+.hbar-row.clickable{cursor:pointer}
+.hbar-row.clickable:hover{background:var(--surface-2)}
+.hbar-row.current{background:var(--primary-soft)}
+.hbar-row.current .hbar-label{color:var(--primary);font-weight:850}
+.hbar-label{font-size:.72rem;font-weight:750;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbar-tracks{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hbar-track{height:9px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#6d5cf0,var(--primary));transition:width .5s cubic-bezier(.22,1,.36,1)}
+.hbar-fill.income{background:linear-gradient(90deg,#38b98a,var(--success))}
+.hbar-fill.expense{background:linear-gradient(90deg,#f07276,var(--danger))}
+.hbar-value{font-size:.76rem;font-weight:800;text-align:right;white-space:nowrap;letter-spacing:-.01em}
+.hbar-value.pos{color:var(--success)}
+.hbar-value.neg{color:var(--danger)}
+.hbar-legend{display:flex;gap:16px;justify-content:center;margin-top:14px;font-size:.72rem;font-weight:600;color:var(--muted)}
+.hbar-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.hbar-legend i.income{background:var(--success)}
+.hbar-legend i.expense{background:var(--danger)}
+
+/* ============ Навигация по месяцам ============ */
+.month-nav{display:flex;align-items:center;gap:8px;margin-bottom:14px;position:relative;z-index:1}
+.month-nav button{width:40px;height:40px;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.08);color:#fff;font-size:1.05rem;display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.month-nav button:hover{background:rgba(255,255,255,.16)}
+.month-nav button:active{transform:scale(.94)}
+.month-nav select{flex:1;min-width:0;appearance:none;-webkit-appearance:none;background-color:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:12px;padding:11px 36px 11px 14px;font-size:.85rem;font-weight:800;text-align:center;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+.month-nav select option{color:var(--text);background:var(--surface)}
+
+/* ============ Напоминания ============ */
+.reminder-item{display:flex;align-items:center;gap:11px;padding:11px 10px;border:1px solid var(--border);border-radius:13px;background:var(--surface-2);margin-bottom:8px}
+.reminder-item .rem-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-2);font-size:1.05rem;flex-shrink:0}
+.reminder-item .rem-body{flex:1;min-width:0}
+.reminder-item .rem-text{font-size:.82rem;font-weight:750;color:var(--text);word-break:break-word}
+.reminder-item .rem-meta{font-size:.68rem;color:var(--muted);margin-top:3px}
+.reminder-item .rem-del{width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.reminder-item .rem-del:hover{background:var(--danger-soft);color:var(--danger)}
+.reminder-item.past{opacity:.6}
+.rem-tag{display:inline-block;font-size:.62rem;font-weight:800;color:var(--accent-2);background:var(--accent-soft);border-radius:6px;padding:2px 6px;margin-left:6px}
+.cal-day .rem-hint{position:absolute;top:4px;right:6px;font-size:.6rem;line-height:1;opacity:.95}
+
+/* ============ Уведомления ============ */
+.notify-status{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:.8rem;line-height:1.55}
+.notify-status .row{display:flex;justify-content:space-between;gap:10px;padding:5px 0}
+.notify-status .row b{font-weight:800}
+.notify-status .ok{color:var(--success);font-weight:800}
+.notify-status .bad{color:var(--danger);font-weight:800}
+.notify-hint{font-size:.74rem;color:var(--muted);line-height:1.55;margin-top:12px}
+.notify-hint code{background:var(--surface-3);border-radius:5px;padding:1px 5px;font-size:.72rem}
+
 /* ============ Баланс ============ */
 .balance-card{background:linear-gradient(150deg,#1e293b,#0f172a);color:#fff;border-radius:20px;padding:22px;position:relative;overflow:hidden}
 .balance-card::before{content:"";position:absolute;top:-60px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--primary) 55%,transparent),transparent 70%);pointer-events:none}
@@ -332,6 +382,9 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
   .cal-day .sums{font-size:.46rem}
   .cal-day .sums-savings{font-size:.46rem}
   .tx-delete,.del{width:38px;height:38px}
+  .hbar-row{grid-template-columns:52px minmax(0,1fr) 78px;gap:8px}
+  .hbar-value{font-size:.7rem}
+  .month-nav button{width:36px;height:36px}
 }
 </style>
 </head>
@@ -514,6 +567,10 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
         style="justify-content:center;background:#a6833a;">
         <span class="btn-icon">🏦</span><span class="btn-label">Отложить в копилку</span>
       </button>
+      <button class="add-btn" id="dayAddReminder"
+        style="justify-content:center;background:var(--accent);">
+        <span class="btn-icon">⏰</span><span class="btn-label">Напоминание</span>
+      </button>
     </div>
     <div class="modal-actions" style="margin-top:16px;">
       <button class="btn-cancel" id="dayCancel" style="width:100%;">
@@ -532,6 +589,59 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       <button class="btn-cancel" id="dayListClose" style="width:100%;">
         Закрыть
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: напоминание -->
+<div class="modal-bg" id="modalReminder">
+  <div class="modal" style="max-width:430px;">
+    <h2>⏰ Новое напоминание</h2>
+
+    <div class="form-row">
+      <label>Дата</label>
+      <input type="date" id="remDate">
+    </div>
+
+    <div class="form-row">
+      <label>Время</label>
+      <input type="time" id="remTime" value="09:00">
+    </div>
+
+    <div class="form-row">
+      <label>О чём напомнить</label>
+      <input type="text" id="remText" maxlength="120"
+             placeholder="Например: оплатить интернет">
+    </div>
+
+    <div class="form-row">
+      <label>Когда прислать уведомление</label>
+      <div class="type-toggle" id="remBeforeToggle"
+           style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">
+        <button data-before="0">В момент</button>
+        <button data-before="10">За 10 мин</button>
+        <button data-before="30">За 30 мин</button>
+        <button data-before="60" class="active">За час</button>
+        <button data-before="180">За 3 часа</button>
+        <button data-before="1440">За день</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" id="remCancel">Отмена</button>
+      <button class="btn-save" id="remSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка: уведомления -->
+<div class="modal-bg" id="modalNotify">
+  <div class="modal" style="max-width:440px;">
+    <h2>🔔 Уведомления в Telegram</h2>
+    <div id="notifyStatusBox"></div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn-cancel" id="notifyClose">Закрыть</button>
+      <button class="btn-save" id="notifyTest">Отправить тест</button>
     </div>
   </div>
 </div>
@@ -606,20 +716,13 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     remaining: TARGET_SUM, percent: 0,
     byNominal: { 100: 0, 200: 0, 500: 0, 1000: 0 },
   };
-  const EMPTY_BUDGET = {
-    month: { income: 0, expense: 0, balance: 0 },
-    week: { income: 0, expense: 0, balance: 0 },
-    all: { income: 0, expense: 0, balance: 0 },
-    byCategory: { income: [], expense: [] },
-  };
   const STATE = {
     tab: 'savings',
     entries: [],
     summary: EMPTY_SUMMARY,
     stats: null,
     transactions: [],
-    budget: EMPTY_BUDGET,
-    budgetStats: null,
+    reminders: [],
     categories: { income: [], expense: [] },
     currentUser: (() => {
       const saved = localStorage.getItem('kopilka_user');
@@ -630,11 +733,13 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       return 'Я';
     })(),
     calView: new Date(),
+    budgetMonth: null,   // 'YYYY-MM', выбранный месяц в Бюджете
     txType: 'expense',
     txCatId: null,
     catType: 'expense',
     pickedEmoji: '📌',
     pickedColor: '#7a99ac',
+    remBefore: 60,       // за сколько минут напомнить
     selectedDateForAction: null,
     online: null, // null = ещё не знаем
   };
@@ -682,11 +787,107 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     else tg.HapticFeedback.impactOccurred(type || 'light');
   }
 
+  // ============ Дата / месяцы ============
+  const MONTH_NAMES = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                       'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const SHORT_MONTHS = ['янв','фев','мар','апр','май','июн',
+                        'июл','авг','сен','окт','ноя','дек'];
+
+  function monthKeyOf(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+  function monthLabelFromKey(key) {
+    const [y, m] = String(key).split('-').map(Number);
+    if (!y || !m) return key;
+    return `${MONTH_NAMES[m - 1]} ${y}`;
+  }
+  function monthShortFromKey(key) {
+    const [y, m] = String(key).split('-').map(Number);
+    if (!y || !m) return key;
+    return `${SHORT_MONTHS[m - 1]} ${String(y).slice(2)}`;
+  }
+  function computeMonthStats(key) {
+    let income = 0, expense = 0;
+    for (const t of STATE.transactions) {
+      if (t.date.startsWith(key)) {
+        if (t.type === 'income') income += t.amount;
+        else expense += t.amount;
+      }
+    }
+    return { income, expense, balance: income - expense };
+  }
+  // Серия по 12 месяцам (последний — текущий), свежие первыми в отрисовке
+  function buildMonthly() {
+    const now = new Date();
+    const out = [];
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = monthKeyOf(d);
+      let income = 0, expense = 0;
+      for (const t of STATE.transactions) {
+        if (t.date.startsWith(key)) {
+          if (t.type === 'income') income += t.amount;
+          else expense += t.amount;
+        }
+      }
+      out.push({
+        key, label: monthShortFromKey(key),
+        income, expense, balance: income - expense, current: i === 0,
+      });
+    }
+    return out;
+  }
+  function buildCumulative() {
+    let running = 0;
+    return buildMonthly().map(m => {
+      running += m.balance;
+      return { label: m.label, value: running };
+    });
+  }
+  function topExpensesFor(key) {
+    const byCat = {};
+    for (const t of STATE.transactions) {
+      if (t.type === 'expense' && t.date.startsWith(key)) {
+        byCat[t.categoryId] = (byCat[t.categoryId] || 0) + t.amount;
+      }
+    }
+    return (STATE.categories.expense || [])
+      .map(c => ({ ...c, amount: byCat[c.id] || 0 }))
+      .filter(c => c.amount > 0)
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 8);
+  }
+  function availableMonths() {
+    const set = new Set();
+    set.add(monthKeyOf(new Date()));
+    if (STATE.budgetMonth) set.add(STATE.budgetMonth);
+    for (const t of STATE.transactions) set.add(t.date.slice(0, 7));
+    return [...set].sort().reverse().map(k => ({ key: k, label: monthLabelFromKey(k) }));
+  }
+  function ensureBudgetMonth() {
+    if (!STATE.budgetMonth) STATE.budgetMonth = monthKeyOf(new Date());
+  }
+  function beforeLabel(min) {
+    const map = { 0: 'в момент', 10: 'за 10 мин', 30: 'за 30 мин',
+                  60: 'за час', 180: 'за 3 часа', 1440: 'за день' };
+    return map[min] || `за ${min} мин`;
+  }
+  function fmtDateTime(ms) {
+    return new Date(ms).toLocaleString('ru-RU', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  }
+
   // ============ API ============
+  async function parseResponse(r) {
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || (r.status + ' ' + r.statusText));
+    return data;
+  }
   async function apiGet(url) {
     const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error(url + ' ' + r.status);
-    return r.json();
+    return parseResponse(r);
   }
   async function apiPost(url, body) {
     const r = await fetch(url, {
@@ -694,8 +895,7 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    if (!r.ok) throw new Error(url + ' ' + r.status);
-    return r.json();
+    return parseResponse(r);
   }
   async function apiDelete(url, body) {
     const r = await fetch(url, {
@@ -703,8 +903,22 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    if (!r.ok) throw new Error(url + ' ' + r.status);
-    return r.json();
+    return parseResponse(r);
+  }
+
+  // Регистрация пользователя Telegram для рассылки уведомлений
+  async function registerTelegramUser() {
+    const u = tg?.initDataUnsafe?.user;
+    if (!u?.id) return;
+    try {
+      await apiPost('/api/register', {
+        id: u.id,
+        name: u.first_name || u.username || 'Участник',
+        username: u.username || null,
+      });
+    } catch (e) {
+      console.warn('register failed:', e.message);
+    }
   }
 
   // ============ Загрузка данных ============
@@ -713,22 +927,20 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     const forceRender = opts.forceRender === true;
     if (!silent) showSyncing(true);
     try {
-      const [e, s, st, tx, b, bs, cats] = await Promise.all([
+      const [e, s, st, tx, cats, rem] = await Promise.all([
         apiGet('/api/entries'),
         apiGet('/api/summary'),
         apiGet('/api/stats'),
         apiGet('/api/transactions'),
-        apiGet('/api/budget'),
-        apiGet('/api/budget-stats'),
         apiGet('/api/categories'),
+        apiGet('/api/reminders'),
       ]);
       STATE.entries = e.entries || [];
       STATE.summary = s;
       STATE.stats = st;
       STATE.transactions = tx.transactions || [];
-      STATE.budget = b;
-      STATE.budgetStats = bs;
       STATE.categories = cats.categories || { income: [], expense: [] };
+      STATE.reminders = rem.reminders || [];
       setOnline(true);
 
       const anyModalOpen = !!document.querySelector('.modal-bg.show');
@@ -739,7 +951,6 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       console.error(err);
       setOnline(false);
       STATE.stats = STATE.stats || { byMonth: [], byWeek: [], cumulative: [], weekdays: [] };
-      STATE.budgetStats = STATE.budgetStats || { monthly: [], cumulative: [], topExpenses: [] };
       if (!silent) {
         renderCurrentTab();
         showToast('Не удалось загрузить данные', true);
@@ -767,6 +978,8 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
 
     const themeBtn = $('themeBtn');
     if (themeBtn) themeBtn.onclick = openThemePanel;
+    const notifyBtn = $('notifyBtn');
+    if (notifyBtn) notifyBtn.onclick = openNotifyModal;
     applyOnlineState();
   }
 
@@ -788,6 +1001,7 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
           </div>
         </div>
         <div class="header-actions">
+          <button class="icon-btn" id="notifyBtn" aria-label="Уведомления">🔔</button>
           <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
           <button class="add-btn" id="openSavingsBtn">
             <span class="btn-icon">＋</span><span class="btn-label">Отложить</span>
@@ -924,36 +1138,46 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     if (!st) { wrap.innerHTML = '<div class="skeleton"></div>'; return; }
 
     if (tab === 'month') {
-      renderBarChart(st.byMonth, 'label', 'sum', 'Нет данных за 12 месяцев', wrap);
+      const rows = st.byMonth.map((d, i) => ({
+        label: d.key ? monthShortFromKey(d.key) : d.label,
+        value: d.sum, current: i === st.byMonth.length - 1,
+      }));
+      renderHBars(wrap, rows.reverse(), 'Нет данных за 12 месяцев');
     } else if (tab === 'week') {
-      renderBarChart(st.byWeek, 'label', 'sum', 'Нет данных за 12 недель', wrap);
+      const rows = st.byWeek.map((d, i) => ({
+        label: d.label, value: d.sum, current: i === st.byWeek.length - 1,
+      }));
+      renderHBars(wrap, rows.reverse(), 'Нет данных за 12 недель');
     } else if (tab === 'cumulative') {
       renderLineChart(st.cumulative.map(c => ({ label: c.label, value: c.total })), wrap);
     } else if (tab === 'weekday') {
-      renderBarChart(st.weekdays, 'label', 'sum', 'Нет данных', wrap);
+      const todayIdx = (new Date().getDay() + 6) % 7;
+      const rows = st.weekdays.map((d, i) => ({
+        label: d.label, value: d.sum, current: i === todayIdx,
+      }));
+      renderHBars(wrap, rows, 'Нет данных');
     }
   }
 
-  function renderBarChart(data, labelKey, valKey, emptyMsg, wrap) {
-    const values = data.map(d => d[valKey]);
-    const maxVal = Math.max(...values, 1);
-    const allZero = values.every(v => v === 0);
-    if (allZero) {
+  // Горизонтальный список-диаграмма: не нужно прокручивать, свежее — сверху
+  function renderHBars(wrap, rows, emptyMsg) {
+    const max = Math.max(...rows.map(r => r.value), 1);
+    if (!rows.some(r => r.value > 0)) {
       wrap.innerHTML = `<div class="charts-empty">${emptyMsg}</div>`;
       return;
     }
     wrap.innerHTML = `
-      <div class="bar-chart">
-        ${data.map(d => {
-          const h = Math.max(2, (d[valKey] / maxVal) * 100);
-          return `
-            <div class="bar-col" title="${fmtMoney(d[valKey])} ₽">
-              <div class="bar" style="height:${h}%">
-                ${d[valKey] > 0 ? `<div class="bar-val">${fmtShort(d[valKey])}</div>` : ''}
+      <div class="hbar-list">
+        ${rows.map(r => `
+          <div class="hbar-row${r.current ? ' current' : ''}">
+            <div class="hbar-label">${escapeHtml(r.label)}</div>
+            <div class="hbar-tracks">
+              <div class="hbar-track">
+                <div class="hbar-fill" style="width:${r.value > 0 ? Math.max(3, (r.value / max) * 100) : 0}%"></div>
               </div>
-              <div class="bar-lbl">${d[labelKey]}</div>
-            </div>`;
-        }).join('')}
+            </div>
+            <div class="hbar-value">${r.value > 0 ? fmtMoney(r.value) + ' ₽' : '—'}</div>
+          </div>`).join('')}
       </div>
     `;
   }
@@ -1005,8 +1229,8 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       <svg class="line-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         <defs>
           <linearGradient id="gradientArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+            <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/>
           </linearGradient>
         </defs>
         ${gridHtml}
@@ -1043,24 +1267,36 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
   // ==================== ВКЛАДКА «БЮДЖЕТ» ===========================
   // =================================================================
   function renderBudgetTab() {
-    const b = STATE.budget;
-    const balanceClass = b.month.balance < 0 ? 'negative' : '';
+    ensureBudgetMonth();
+    const key = STATE.budgetMonth;
+    const ms = computeMonthStats(key);
+    const balanceClass = ms.balance < 0 ? 'negative' : '';
+    const months = availableMonths();
+
     $('header').innerHTML = `
       <div class="balance-card">
-        <div class="label">Баланс за месяц</div>
-        <div class="value ${balanceClass}">${fmtMoney(b.month.balance)} ₽</div>
+        <div class="month-nav">
+          <button id="bmPrev" aria-label="Предыдущий месяц">‹</button>
+          <select id="bmSelect" aria-label="Выбор месяца">
+            ${months.map(m => `<option value="${m.key}"${m.key === key ? ' selected' : ''}>${escapeHtml(m.label)}</option>`).join('')}
+          </select>
+          <button id="bmNext" aria-label="Следующий месяц">›</button>
+        </div>
+        <div class="label">Баланс за ${escapeHtml(monthLabelFromKey(key).toLowerCase())}</div>
+        <div class="value ${balanceClass}">${ms.balance < 0 ? '−' : ''}${fmtMoney(Math.abs(ms.balance))} ₽</div>
         <div class="row">
           <div class="col">
             <div class="label">Доходы</div>
-            <div class="value income">+${fmtMoney(b.month.income)} ₽</div>
+            <div class="value income">+${fmtMoney(ms.income)} ₽</div>
           </div>
           <div class="col">
             <div class="label">Расходы</div>
-            <div class="value expense">−${fmtMoney(b.month.expense)} ₽</div>
+            <div class="value expense">−${fmtMoney(ms.expense)} ₽</div>
           </div>
         </div>
       </div>
       <div class="header-actions" style="justify-content:flex-end;margin-top:10px;">
+        <button class="icon-btn" id="notifyBtn" aria-label="Уведомления">🔔</button>
         <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
         <button class="add-btn" id="openTxBtn">
           <span class="btn-icon">＋</span><span class="btn-label">Добавить операцию</span>
@@ -1068,14 +1304,15 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       </div>
     `;
     $('openTxBtn').onclick = () => openTxModal();
+    $('bmSelect').onchange = e => { STATE.budgetMonth = e.target.value; renderBudgetTab(); };
+    $('bmPrev').onclick = () => shiftBudgetMonth(-1);
+    $('bmNext').onclick = () => shiftBudgetMonth(1);
 
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const monthTxs = STATE.transactions
-      .filter(t => new Date(t.date + 'T00:00:00') >= monthStart)
-      .sort((a, b) => (b.date === a.date)
+      .filter(t => t.date.startsWith(key))
+      .sort((a, b) => (a.date === b.date)
         ? (b.created_at - a.created_at)
-        : (b.date > a.date ? 1 : -1));
+        : (a.date < b.date ? 1 : -1));
 
     $('tabContent').innerHTML = `
       <div class="section">
@@ -1090,7 +1327,7 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       </div>
 
       <div class="section">
-        <h2>📝 Операции за месяц <span style="font-size:.72rem;color:var(--muted);">(${monthTxs.length})</span></h2>
+        <h2>📝 Операции за ${escapeHtml(monthLabelFromKey(key).toLowerCase())} <span style="font-size:.72rem;color:var(--muted);">(${monthTxs.length})</span></h2>
         <div class="tx-list" id="txList"></div>
       </div>
 
@@ -1128,6 +1365,15 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     renderCatManageList('income', 'budgetCatIncome');
     renderCatManageList('expense', 'budgetCatExpense');
     $('budgetAddCat').onclick = () => openCatModal();
+  }
+
+  function shiftBudgetMonth(delta) {
+    const [y, m] = STATE.budgetMonth.split('-').map(Number);
+    const d = new Date(y, m - 1 + delta, 1);
+    const key = monthKeyOf(d);
+    if (delta > 0 && key > monthKeyOf(new Date())) return; // не уходим в будущее
+    STATE.budgetMonth = key;
+    renderBudgetTab();
   }
 
   function renderTxList(txs) {
@@ -1176,52 +1422,51 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
   }
 
   function renderBudgetChart(tab) {
-    const bs = STATE.budgetStats;
     const wrap = $('budgetChart');
     const extra = $('budgetExtra');
     extra.innerHTML = '';
-    if (!bs) { wrap.innerHTML = '<div class="skeleton"></div>'; return; }
 
     if (tab === 'monthly') {
-      renderDualBarChart(bs.monthly, wrap);
+      renderHBarsDual(wrap, buildMonthly());
     } else if (tab === 'cumulative') {
-      renderLineChart(bs.cumulative.map(c => ({ label: c.label, value: c.value })), wrap);
+      renderLineChart(buildCumulative(), wrap);
     } else if (tab === 'topExp') {
       wrap.innerHTML = '';
-      renderTopExpenses(bs.topExpenses, extra);
+      renderTopExpenses(topExpensesFor(STATE.budgetMonth), extra);
     }
   }
 
-  function renderDualBarChart(monthly, wrap) {
-    const maxVal = Math.max(
-      ...monthly.map(m => Math.max(m.income, m.expense)), 1
-    );
-    const allZero = monthly.every(m => m.income === 0 && m.expense === 0);
-    if (allZero) {
+  // Горизонтальные парные полосы: доход/расход по месяцам, свежие — сверху.
+  // Клик по строке переключает выбранный месяц.
+  function renderHBarsDual(wrap, monthly) {
+    const max = Math.max(...monthly.map(m => Math.max(m.income, m.expense)), 1);
+    if (!monthly.some(m => m.income > 0 || m.expense > 0)) {
       wrap.innerHTML = '<div class="charts-empty">Нет данных за 12 месяцев</div>';
       return;
     }
+    const rows = [...monthly].reverse();
     wrap.innerHTML = `
-      <div class="bar-chart">
-        ${monthly.map(m => {
-          const hIn = Math.max(2, (m.income / maxVal) * 100);
-          const hEx = Math.max(2, (m.expense / maxVal) * 100);
-          return `
-            <div class="bar-col" style="justify-content:flex-end;"
-                 title="Доход: ${fmtMoney(m.income)} ₽&#10;Расход: ${fmtMoney(m.expense)} ₽">
-              <div class="bar-pair" style="height:100%;">
-                <div class="b income"  style="height:${m.income  ? hIn : 0}%"></div>
-                <div class="b expense" style="height:${m.expense ? hEx : 0}%"></div>
-              </div>
-              <div class="bar-lbl">${m.label}</div>
-            </div>`;
-        }).join('')}
+      <div class="hbar-list">
+        ${rows.map(m => `
+          <div class="hbar-row clickable${m.key === STATE.budgetMonth ? ' current' : ''}"
+               data-month="${m.key}"
+               title="Показать операции за ${escapeHtml(monthLabelFromKey(m.key))}">
+            <div class="hbar-label">${escapeHtml(m.label)}</div>
+            <div class="hbar-tracks">
+              <div class="hbar-track"><div class="hbar-fill income" style="width:${m.income ? Math.max(3, (m.income / max) * 100) : 0}%"></div></div>
+              <div class="hbar-track"><div class="hbar-fill expense" style="width:${m.expense ? Math.max(3, (m.expense / max) * 100) : 0}%"></div></div>
+            </div>
+            <div class="hbar-value ${m.balance >= 0 ? 'pos' : 'neg'}">${m.balance >= 0 ? '+' : '−'}${fmtMoney(Math.abs(m.balance))} ₽</div>
+          </div>`).join('')}
       </div>
-      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:.72rem;font-weight:600;">
-        <span><span style="display:inline-block;width:10px;height:10px;background:var(--success);border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Доход</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:var(--danger);border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Расход</span>
+      <div class="hbar-legend">
+        <span><i class="income"></i>Доход</span>
+        <span><i class="expense"></i>Расход</span>
       </div>
     `;
+    wrap.querySelectorAll('.hbar-row.clickable').forEach(row => {
+      row.onclick = () => { STATE.budgetMonth = row.dataset.month; renderBudgetTab(); };
+    });
   }
 
   function renderTopExpenses(topExpenses, wrap) {
@@ -1331,23 +1576,24 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
             </span>
           </div>
         </div>
-        <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
+        <div class="header-actions">
+          <button class="icon-btn" id="notifyBtn" aria-label="Уведомления">🔔</button>
+          <button class="icon-btn" id="themeBtn" aria-label="Тема">◐</button>
+        </div>
       </div>
     `;
 
-    const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь',
-                        'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
     const year = STATE.calView.getFullYear();
     const month = STATE.calView.getMonth();
 
     $('tabContent').innerHTML = `
       <div class="section">
         <div class="cal-head">
-          <div class="cal-title">${monthNames[month]} ${year}</div>
+          <div class="cal-title">${MONTH_NAMES[month]} ${year}</div>
           <div class="cal-nav">
-            <button id="calPrev">‹</button>
-            <button id="calToday">•</button>
-            <button id="calNext">›</button>
+            <button id="calPrev" aria-label="Предыдущий месяц">‹</button>
+            <button id="calToday" aria-label="Текущий месяц">•</button>
+            <button id="calNext" aria-label="Следующий месяц">›</button>
           </div>
         </div>
         <div class="cal-weekdays">
@@ -1359,21 +1605,39 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
           <span><span style="display:inline-block;width:10px;height:10px;background:var(--success-soft);border:1.5px solid color-mix(in srgb,var(--success) 25%,var(--border));border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Доход</span>
           <span><span style="display:inline-block;width:10px;height:10px;background:var(--danger-soft);border:1.5px solid color-mix(in srgb,var(--danger) 25%,var(--border));border-radius:3px;margin-right:4px;vertical-align:middle;"></span>Расход</span>
           <span><span style="display:inline-block;width:8px;height:8px;background:#c4a356;border-radius:50%;margin-right:4px;vertical-align:middle;"></span>Копилка</span>
+          <span><span style="margin-right:4px;">⏰</span>Напоминание</span>
         </div>
       </div>
 
       <div class="section">
-        <h2>📊 Итого за ${monthNames[month]}</h2>
+        <h2>📊 Итого за ${MONTH_NAMES[month]}</h2>
         <div id="monthSummary"></div>
+      </div>
+
+      <div class="section">
+        <h2>⏰ Напоминания за ${MONTH_NAMES[month]}
+          <button class="add-btn" id="calAddReminder"
+                  style="padding:8px 12px;font-size:.78rem;">
+            <span class="btn-icon">＋</span><span class="btn-label">Добавить</span>
+          </button>
+        </h2>
+        <div id="remindersList"></div>
       </div>
     `;
 
     $('calPrev').onclick = () => { STATE.calView = new Date(year, month - 1, 1); renderCalendarTab(); };
     $('calNext').onclick = () => { STATE.calView = new Date(year, month + 1, 1); renderCalendarTab(); };
     $('calToday').onclick = () => { STATE.calView = new Date(); renderCalendarTab(); };
+    $('calAddReminder').onclick = () => {
+      const now = new Date();
+      const isCurrent = year === now.getFullYear() && month === now.getMonth();
+      const p = x => String(x).padStart(2, '0');
+      openReminderModal(isCurrent ? todayStr() : `${year}-${p(month + 1)}-01`);
+    };
 
     renderCalendarGrid();
     renderMonthSummary();
+    renderRemindersList();
   }
 
   function renderCalendarGrid() {
@@ -1383,6 +1647,7 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     const incomeByDate = {};
     const expenseByDate = {};
     const savingsByDate = {};
+    const remindersByDate = {};
 
     for (const t of STATE.transactions) {
       const d = t.date;
@@ -1391,6 +1656,9 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     }
     for (const e of STATE.entries) {
       savingsByDate[e.date] = (savingsByDate[e.date] || 0) + e.amount;
+    }
+    for (const r of STATE.reminders) {
+      remindersByDate[r.date] = (remindersByDate[r.date] || 0) + 1;
     }
 
     const firstDay = new Date(year, month, 1);
@@ -1431,6 +1699,10 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       if (hasSav) {
         inner += `<div class="sums-savings">🏦 ${fmtShort(sav)}</div>`;
         inner += '<div class="savings-dot"></div>';
+      }
+
+      if (remindersByDate[dateStr]) {
+        inner += '<div class="rem-hint" title="Напоминание">⏰</div>';
       }
 
       html += `<div class="${classes.join(' ')}" data-date="${dateStr}">${inner}</div>`;
@@ -1488,13 +1760,16 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
 
     const dayTxs = STATE.transactions.filter(t => t.date === dateStr);
     const dayEntries = STATE.entries.filter(e => e.date === dateStr);
+    const dayReminders = STATE.reminders
+      .filter(r => r.date === dateStr)
+      .sort((a, b) => a.at - b.at);
 
     const d = new Date(dateStr + 'T00:00:00');
     const dateStrHuman = d.toLocaleDateString('ru-RU', {
       day: '2-digit', month: 'long', year: 'numeric'
     });
 
-    if (dayTxs.length === 0 && dayEntries.length === 0) {
+    if (dayTxs.length === 0 && dayEntries.length === 0 && dayReminders.length === 0) {
       openDayAction(dateStr, dateStrHuman);
       return;
     }
@@ -1543,7 +1818,16 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       html += '</div>';
     }
 
+    if (dayReminders.length > 0) {
+      html += '<div style="margin-bottom:12px;"><div style="font-weight:800;font-size:.78rem;color:var(--muted);margin-bottom:6px;">⏰ Напоминания</div>';
+      html += dayReminders.map(reminderItemHtml).join('');
+      html += '</div>';
+    }
+
     $('dayListContent').innerHTML = html;
+    $('dayListContent').querySelectorAll('.rem-del').forEach(btn => {
+      btn.onclick = () => { closeDayList(); deleteReminder(btn.dataset.id); };
+    });
 
     const addBtn = document.createElement('button');
     addBtn.className = 'add-btn';
@@ -1565,6 +1849,146 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
     $('modalDayAction').classList.add('show');
   }
   function closeDayAction() { $('modalDayAction').classList.remove('show'); }
+
+  // =================================================================
+  // ==================== НАПОМИНАНИЯ ================================
+  // =================================================================
+  function reminderItemHtml(r) {
+    const past = Number(r.at) < Date.now();
+    const tag = r.before > 0
+      ? `<span class="rem-tag">уведомить ${beforeLabel(r.before)}</span>` : '';
+    return `
+      <div class="reminder-item${past ? ' past' : ''}">
+        <div class="rem-ic">⏰</div>
+        <div class="rem-body">
+          <div class="rem-text">${escapeHtml(r.text)}</div>
+          <div class="rem-meta">${fmtDateTime(r.at)} · ${escapeHtml(r.author || 'Кто-то')}${tag}</div>
+        </div>
+        <button class="rem-del" data-id="${r.id}" title="Удалить">${ICON_TRASH}</button>
+      </div>`;
+  }
+
+  function renderRemindersList() {
+    const wrap = $('remindersList');
+    if (!wrap) return;
+    const year = STATE.calView.getFullYear();
+    const month = STATE.calView.getMonth();
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`;
+    const list = STATE.reminders
+      .filter(r => String(r.date).startsWith(key))
+      .sort((a, b) => a.at - b.at);
+    if (list.length === 0) {
+      wrap.innerHTML = '<div class="history-empty" style="min-height:auto;padding:22px;font-size:.8rem;">Нет напоминаний в этом месяце</div>';
+      return;
+    }
+    wrap.innerHTML = list.map(reminderItemHtml).join('');
+    wrap.querySelectorAll('.rem-del').forEach(btn => {
+      btn.onclick = () => deleteReminder(btn.dataset.id);
+    });
+  }
+
+  function openReminderModal(dateStr) {
+    $('remDate').value = dateStr || todayStr();
+    $('remTime').value = '09:00';
+    $('remText').value = '';
+    STATE.remBefore = 60;
+    updateRemBeforeButtons();
+    $('modalReminder').classList.add('show');
+    vibrate('light');
+  }
+  function closeReminderModal() { $('modalReminder').classList.remove('show'); }
+
+  function updateRemBeforeButtons() {
+    document.querySelectorAll('#remBeforeToggle button').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.before) === STATE.remBefore);
+    });
+  }
+
+  async function saveReminder() {
+    const date = $('remDate').value;
+    const time = $('remTime').value || '09:00';
+    const text = $('remText').value.trim();
+    if (!text) { showToast('Введите текст напоминания', true); return; }
+
+    // Абсолютное время считаем в часовом поясе пользователя
+    const at = new Date(`${date}T${time}:00`).getTime();
+    if (!Number.isFinite(at)) { showToast('Проверьте дату и время', true); return; }
+
+    closeReminderModal();
+    try {
+      await apiPost('/api/reminders', {
+        date, time, text, before: STATE.remBefore, at,
+        author: STATE.currentUser,
+      });
+      showToast('Напоминание создано');
+      vibrate('success');
+      await reload({ forceRender: true });
+    } catch (e) {
+      showToast(e.message || 'Ошибка сохранения', true);
+      vibrate('error');
+    }
+  }
+
+  async function deleteReminder(id) {
+    if (!confirm('Удалить напоминание?')) return;
+    try {
+      await apiDelete('/api/reminders', { id });
+      showToast('Напоминание удалено');
+      await reload({ forceRender: true });
+    } catch (e) {
+      showToast('Ошибка удаления', true);
+    }
+  }
+
+  // =================================================================
+  // ==================== УВЕДОМЛЕНИЯ ================================
+  // =================================================================
+  async function openNotifyModal() {
+    $('modalNotify').classList.add('show');
+    vibrate('light');
+    const box = $('notifyStatusBox');
+    box.innerHTML = '<div class="skeleton" style="min-height:120px;"></div>';
+    try {
+      const s = await apiGet('/api/notify');
+      const usersHtml = s.users.length
+        ? `<div style="border-top:1px solid var(--border);margin-top:6px;padding-top:8px;">${
+            s.users.map(u =>
+              `<div style="padding:2px 0;">${u.notify ? '🔔' : '🔕'} ${escapeHtml(u.name)}${u.username ? ' · @' + escapeHtml(u.username) : ''}</div>`
+            ).join('')}</div>`
+        : '';
+      box.innerHTML = `
+        <div class="notify-status">
+          <div class="row"><span>Бот настроен</span><b class="${s.botConfigured ? 'ok' : 'bad'}">${s.botConfigured ? 'да' : 'нет'}</b></div>
+          <div class="row"><span>Зарегистрировано</span><b>${s.total}</b></div>
+          <div class="row"><span>С уведомлениями</span><b>${s.subscribed}</b></div>
+          ${usersHtml}
+        </div>
+        ${!s.botConfigured
+          ? '<div class="notify-hint">Добавьте переменную <code>TELEGRAM_BOT_TOKEN</code> в настройках проекта на Vercel и перезадеплойте.</div>'
+          : (s.subscribed === 0
+            ? '<div class="notify-hint">Пока никто не подписан. Откройте приложение из бота — регистрация происходит автоматически. Также проверьте, что у бота установлен webhook (см. README).</div>'
+            : '<div class="notify-hint">Нажмите «Отправить тест», чтобы проверить доставку сообщений.</div>')}
+      `;
+    } catch (e) {
+      box.innerHTML = '<div class="notify-status">Не удалось получить статус уведомлений.</div>';
+    }
+  }
+  function closeNotifyModal() { $('modalNotify').classList.remove('show'); }
+
+  async function sendTestNotify() {
+    const btn = $('notifyTest');
+    btn.disabled = true;
+    try {
+      const r = await apiPost('/api/notify', {});
+      showToast(`Отправлено: ${r.sent} из ${r.total}`);
+      vibrate('success');
+    } catch (e) {
+      showToast(e.message || 'Не удалось отправить', true);
+      vibrate('error');
+    } finally {
+      btn.disabled = false;
+    }
+  }
 
   // =================================================================
   // ==================== КАТЕГОРИИ ==================================
@@ -1775,6 +2199,11 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       closeDayAction();
       openSavingsModal(date);
     };
+    $('dayAddReminder').onclick = () => {
+      const date = STATE.selectedDateForAction;
+      closeDayAction();
+      openReminderModal(date);
+    };
 
     // Модалка списка дня
     $('dayListClose').onclick = closeDayList;
@@ -1782,8 +2211,29 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       if (e.target === $('modalDayList')) closeDayList();
     };
 
+    // Модалка напоминания
+    document.querySelectorAll('#remBeforeToggle button').forEach(b => {
+      b.onclick = () => {
+        STATE.remBefore = Number(b.dataset.before);
+        updateRemBeforeButtons();
+      };
+    });
+    $('remCancel').onclick = closeReminderModal;
+    $('remSave').onclick = saveReminder;
+    $('modalReminder').onclick = e => {
+      if (e.target === $('modalReminder')) closeReminderModal();
+    };
+
+    // Модалка уведомлений
+    $('notifyClose').onclick = closeNotifyModal;
+    $('notifyTest').onclick = sendTestNotify;
+    $('modalNotify').onclick = e => {
+      if (e.target === $('modalNotify')) closeNotifyModal();
+    };
+
     // Первая отрисовка каркаса (со скелетонами), затем загрузка данных
     renderCurrentTab();
+    registerTelegramUser();
     reload();
 
     // Тихая автосинхронизация
@@ -1792,6 +2242,12 @@ body[data-theme="dark"] .balance-card{background:linear-gradient(150deg,#0f172a,
       if (document.querySelector('.modal-bg.show')) return;
       reload({ silent: true });
     }, 8000);
+
+    // Тик напоминаний: пока приложение открыто, проверяем время и отправляем
+    setInterval(() => {
+      if (document.hidden) return;
+      fetch('/api/reminders-cron', { cache: 'no-store' }).catch(() => {});
+    }, 60000);
 
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {

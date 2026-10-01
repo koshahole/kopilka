@@ -1,8 +1,7 @@
 import { kv } from '@vercel/kv';
-import { sendMessage, escapeHtml } from '../lib/telegram.js';
+import { broadcast, escapeHtml } from '../lib/telegram.js';
 
 const ENTRIES_KEY = 'kopilka-300k:entries:v1';
-const USERS_KEY = 'kopilka-300k:tg-users:v1';
 const TARGET_SUM = 300000;
 
 export default async function handler(req, res) {
@@ -102,10 +101,6 @@ function isValidDate(s) {
 
 async function sendNotifications({ author, amount, breakdown, action, totalSaved }) {
   try {
-    const users = (await kv.get(USERS_KEY)) || {};
-    const list = Object.values(users).filter(u => u.notify);
-    if (list.length === 0) return;
-
     const isAdd = action === 'add';
     const emoji = isAdd ? '💰' : '↩️';
     const verb = isAdd ? 'отложил' : 'удалил запись на';
@@ -124,7 +119,7 @@ async function sendNotifications({ author, amount, breakdown, action, totalSaved
       `🎯 Всего: <b>${totalSaved.toLocaleString('ru-RU')} ₽</b> (${percent}%)\n` +
       `Осталось: <b>${(TARGET_SUM - totalSaved).toLocaleString('ru-RU')} ₽</b>`;
 
-    await Promise.all(list.map(u => sendMessage(u.id, text)));
+    await broadcast(text);
   } catch (e) {
     console.error('sendNotifications error:', e);
   }
